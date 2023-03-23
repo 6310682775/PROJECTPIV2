@@ -1,7 +1,6 @@
 # from django.shortcuts import render
 from django.http import JsonResponse
-from .tasks import *
-from .tasks import detection
+from mysite.tasks import *
 import json
 from django.http import HttpResponse
 from django.core import serializers
@@ -22,7 +21,7 @@ def new_task(request):
     if request.method == 'POST':
         form = TaskForm(request.POST, request.FILES)
         if form.is_valid():
-            task = form.save()
+            form.save()
             return redirect(reverse("main:dashboard"))
     else:
         form = TaskForm()
@@ -81,12 +80,35 @@ def call_detect(request, task_id):
         "pk": task.pk,
         "video": task.video_file
     }
-
+    vdofile = "video2.mp4"
+    loopfile = "loop.json"
     # task_result = detection.delay(json_d)
-    task_result = detection.delay()
-    task.status = task_result.status
-    task.save()
+    # task_result = run_detect.apply_async((loopfile, vdofile))
+    task_result = run_detect.delay(loopfile, vdofile)
+    # task_result = detection.delay()
+    # task.status = task_result.status
+    # task.save()
     return HttpResponse(task_result, content_type='application/json')
+
+
+# def call_detect(request, task_id):
+
+#     task = Task.objects.get(pk=task_id)
+#     loop = task.loop
+#     name =  task.
+#     json_d = {
+#         "task_id": task_id,
+#         "pk": task.pk,
+#         "video": task.video_file
+#     }
+#     loopname,vdoname =  ,os.path.join(BASE_DIR,fileobject.vdo.name)
+#             print(loopname,vdoname)
+#             res = run_detect.apply_async((loopname,vdoname))
+#     # task_result = detection.delay(json_d)
+#     task_result = detection.delay()
+#     task.status = task_result.status
+#     task.save()
+#     return HttpResponse(task_result, content_type='application/json')
 
 
 # def predict(request):

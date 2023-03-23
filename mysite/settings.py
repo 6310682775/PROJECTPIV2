@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Bangkok'
 
 USE_I18N = True
 
@@ -144,7 +144,31 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Bangkok'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_ACKS_LATE = True
+CELERYD_PREFETCH_MULTIPLIER = 1
+CELERYD_CONCURRENCY = 1
+CELERY_BROKER_HEARTBEAT = 0
 
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_RESULT_DB_TABLE = 'myapp_taskresult'
+# CELERY_RESULT_DB_TABLE = 'myapp_taskresult'
 CELERY_TASK_RESULT_EXPIRES = 86400
+# CELERY_CACHE_BACKEND = 'django-cache'
+# CELERY_CACHE_BACKEND = 'default'
+
+# # django setting.
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
+# CELERY_TIMEZONE = "Asia/Bangkok"
+# CELERY_TASK_TRACK_STARTED = True
+# CELERY_TASK_TIME_LIMIT = 30 * 60
+# CELERY_ACKS_LATE = True
+# CELERYD_PREFETCH_MULTIPLIER = 1
+# CELERYD_CONCURRENCY = 1
+# CELERY_BROKER_HEARTBEAT = 0
+# CELERY_RESULT_BACKEND = 'django-db'

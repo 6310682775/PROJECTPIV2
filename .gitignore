@@ -6,6 +6,15 @@ __pycache__/
 # C extensions
 *.so
 
+.vnv
+__pycache__/
+runs
+*.pyc
+*.pt
+vdo/
+*.pyc
+*.mp4
+
 # Distribution / packaging
 .Python
 build/

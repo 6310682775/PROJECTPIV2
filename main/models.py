@@ -43,6 +43,21 @@ class Task(models.Model):
         TaskResult, on_delete=models.CASCADE, null=True)
 
 
+# class Loop(models.Model):
+#     loop_name = models.ForeignKey(Task, on_delete=models.CASCADE)
+#     loop_id = models.IntegerField()
+#     point_x_1 = models.IntegerField()
+#     point_y_1 = models.IntegerField()
+#     point_x_2 = models.IntegerField()
+#     point_y_2 = models.IntegerField()
+#     point_x_3 = models.IntegerField()
+#     point_y_3 = models.IntegerField()
+#     point_x_4 = models.IntegerField()
+#     point_y_4 = models.IntegerField()
+#     orientation = models.CharField(max_length=50)
+#     summary_location_x = models.IntegerField()
+#     summary_location_y = models.IntegerField()
+
 class Loop(models.Model):
     head_task = models.ForeignKey(Task, on_delete=models.CASCADE)
     height = models.IntegerField()
