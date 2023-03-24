@@ -105,7 +105,8 @@ def line_enter_check_and_set(loop, track, tp1, tp2, line_start, line_end):
         if loop["id"] not in track.aoi_entered:
             track.aoi_entered.append(loop["id"])
             msg = f'{loop["id"]},{track.id},{names[int(track.detclass)]},{time_stamp},ENTERED'
-            append_to_file(str(save_dir)+"\\loop.txt", msg)
+            # append_to_file(str(save_dir)+"\\loop.txt", msg)
+            append_to_file(str(save_dir)+"/" + "loop.txt", msg)
             print(
                 f'track {track.id} of type {track.detclass} entered loop {loop["id"]} at time ...{time_stamp}')
 
@@ -123,19 +124,22 @@ def line_exit_check_and_set(loop, track, tp1, tp2, line_start, line_end, line_si
                     loop["orientation"] == "counterclockwise" and line_side == "right"):  # turn left
                 loop_boxes[int(loop["id"])].add_left(int(track.detclass))
                 msg = f'{loop["id"]},{track.id},{names[int(track.detclass)]},{time_stamp}, LEFT'
-                append_to_file(str(save_dir)+"\\loop.txt", msg)
+                # append_to_file(str(save_dir)+"\\loop.txt", msg)
+                append_to_file(str(save_dir)+"/" + "loop.txt", msg)
 
             if (loop["orientation"] == "clockwise" and line_side == "right" or
                     loop["orientation"] == "counterclockwise" and line_side == "left"):  # turn right
                 loop_boxes[int(loop["id"])].add_right(
                     int(track.detclass))  # turn right
                 msg = f'{loop["id"]},{track.id},{names[int(track.detclass)]},{time_stamp}, RIGHT'
-                append_to_file(str(save_dir)+"\\loop.txt", msg)
+                # append_to_file(str(save_dir)+"\\loop.txt", msg)
+                append_to_file(str(save_dir)+"/" + "loop.txt", msg)
 
             if line_side == "straight":
                 loop_boxes[int(loop["id"])].add_straight(int(track.detclass))
                 msg = f'{loop["id"]},{track.id},{names[int(track.detclass)]},{time_stamp}, STRAIGHT'
-                append_to_file(str(save_dir)+"\\loop.txt", msg)
+                # append_to_file(str(save_dir)+"\\loop.txt", msg)
+                append_to_file(str(save_dir)+"/" + "loop.txt", msg)
 
 
 # check if item entering or exit loop
@@ -434,13 +438,17 @@ def detect(save_img=False):
         # print(f"Results saved to {save_dir}{s}")
 
     print(f'Done. ({time.time() - t0:.3f}s)')
-    res1 = '/'+str(save_dir).replace("\\", '/')+'/loop.txt'
-    res2 = '/'+str(save_path).replace("\\", '/')
-    print(res1, res2)
-    return res1, res2
+    # res1 = '/'+str(save_dir).replace("\\", '/')+'/loop.txt'
+    # res2 = '/'+str(save_path).replace("\\", '/')
+    # print(res1, res2)
+    # return res1, res2
+    counting_result_path = str(save_dir)+"/" + "loop.txt"
+    video_result_path = save_path
+
+    return counting_result_path, video_result_path
 
 
-def mymain(cmd=False, custom_arg=None):
+def mymain(loopfile, cmd=False, custom_arg=None):
     global opt
     global count_boxes
     parser = argparse.ArgumentParser()
@@ -501,15 +509,16 @@ def mymain(cmd=False, custom_arg=None):
 
     print(opt)
 
-    with open('loop.json', 'rb') as f:
-        encoding = chardet.detect(f.read())['encoding']
+    # with open('loop.json', 'rb') as f:
+    #     encoding = chardet.detect(f.read())['encoding']
 
-    with open('loop.json', 'r', encoding=encoding) as f:
-        count_boxes = json.load(f)
+    # with open('loop.json', 'r', encoding=encoding) as f:
+    #     count_boxes = json.load(f)
 
     # load loops settings
     # f = open(opt.loop)
-    # count_boxes = json.load(f)
+    # count_boxes = json.load(loopfile)
+    count_boxes = loopfile
     # f.close()
 
     # check_requirements(exclude=('pycocotools', 'thop'))

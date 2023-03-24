@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Task Dashboard</h1>
+
 <a href="{% url 'main:new_task'  %}">New Task</a>
 <table>
     <thead>
@@ -11,9 +12,11 @@
         <th>Location</th>
         <th>Description</th>
         <th>Status</th>
+        <th>task_id_celery</th>
         <th>Video File</th>
-        <th>Time</th>
-        <th>Edit</th>
+        <th>edit_task</th>
+        <th>edit-loop</th>
+        <th>Result</th>
     </tr>
     </thead>
     <tbody>
@@ -24,12 +27,16 @@
         <td>{{ task.location }}</td>
         <td>{{ task.description }}</td>
         <td>
-        {{ task.task_result.status }}
+        {{ task.status }}
+        </td>
+        <td>
+            {{ task.task_id_celery }}
         </td>
         <td><video width="470" height="255" src="{{ task.video_file.url }}" controls></video></td>
         <td>{{ task.time }}</td>
         <td><a href="{% url 'main:edit_task' task.task_id %}">Edit Task</a></td>
         <td><a href="{% url 'main:loop_dashboard' task.task_id %}">Edit Loop</a></td>
+        <td><a href="">Result</a></td>
         
         <td>
             <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
