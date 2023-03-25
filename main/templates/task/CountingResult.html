@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Task Dashboard</h1>
+<!-- <td><video width="470" height="255" src="{{ task.video_result_file.url}}" controls></video></td> -->
+<video width="470" height="255" controls>
+    <source src="{{ task.video_result_file.url }}" type="video/mp4">
+</video>
+  
+<a href="{% url 'main:download_video' task.task_id %}" download>Download Video</a>
+{% for vehicle_count,loop_result in results %}
+        <p>Loop {{loop_result.loop_id}}</p>
+        <a href="{% url 'main:download_file' result_id=loop_result.id %}">Download file</a>
+        <table>
+            <thead>
+            <tr>
+                <th>vehicle_type</th>
+                <th>entered</th>
+                <th>straight</th>
+                <th>right</th>
+                <th>left</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for vehicle in vehicle_count %}
+                <tr>
+                    <td>{{ vehicle.vehicle_type }}</td>
+                    <td>{{ vehicle.entered }}</td>
+                    <td>{{ vehicle.straight }}</td>
+                    <td>{{ vehicle.right }}</td>
+                    <td>{{ vehicle.left }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+{% endfor %}
+
+{% endblock %}

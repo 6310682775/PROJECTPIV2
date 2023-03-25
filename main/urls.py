@@ -14,9 +14,11 @@ urlpatterns = [
     path('loop/edit/<int:loop_id>/', views.edit_loop, name='edit_loop'),
     path('task/result/<int:task_id>/',
          views.get_result, name='get_result'),
+    path('task/result/download/file/<int:result_id>',
+         views.download_file, name='download_file'),
+    path('task/result/download/video/<int:task_id>',
+         views.download_video, name='download_video'),
     path('detection/<int:task_id>/', views.call_detect, name='call_detect'),
-
-
 ]
 # path('task/result/<int:task_id>/',
 #      views.test_save_result, name='test_save_result'),

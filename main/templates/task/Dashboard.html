@@ -37,16 +37,36 @@
         <td>{{ task.time }}</td>
         <td><a href="{% url 'main:edit_task' task.task_id %}">Edit Task</a></td>
         <td><a href="{% url 'main:loop_dashboard' task.task_id %}">Edit Loop</a></td>
-        <td><a href="">Result</a></td>
-        
+        {% if task.status == "SUCCESS" %}
+            <td><a href="{% url 'main:get_result' task.task_id %}">Result</a></td>
+        {% else %}
+            <td><p>WAIT FOR PROCESS</p></td>
+        {% endif %}
+        {% if task.status == "UNPROCESS" %}
+            <td>
+                <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
+                    {% csrf_token %}
+                    <div>
+                        <button type="submit">Send Task</button>
+                    </div>
+                </form>
+            </td>
+        {% elif task.status == "FAILURE" %}
         <td>
             <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
                 {% csrf_token %}
                 <div>
-                    <button type="submit">Send Task</button>
+                    <button type="submit">RESEND TASK</button>
                 </div>
             </form>
         </td>
+        {% else %}
+            <td>
+                <div>
+                    <p>SENDED</p>
+                </div>
+            </td>
+        {% endif %}
         
     </tr>
     {% endfor %}

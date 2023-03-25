@@ -6,7 +6,7 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['date_time', 'location', 'description',
-                  'status', 'video_file', 'time']
+                  'video_file', 'time']
 
 
 class LoopForm(forms.ModelForm):
