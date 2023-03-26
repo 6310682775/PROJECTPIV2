@@ -18,6 +18,10 @@ urlpatterns = [
          views.download_file, name='download_file'),
     path('task/result/download/video/<int:task_id>',
          views.download_video, name='download_video'),
+    path('task/result/download/file/all/<int:task_id>',
+         views.download_all_file, name='download_all_file'),
+    path('task/result/download/file/raw/<int:task_id>',
+         views.download_raw_file, name='download_raw_file'),
     path('detection/<int:task_id>/', views.call_detect, name='call_detect'),
 ]
 # path('task/result/<int:task_id>/',

@@ -17,21 +17,30 @@ from celery.result import AsyncResult
 
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
+import os
+import zipfile
+from django.http import HttpResponse
+import io
 
 
 def download_file(request, result_id):
-
     obj = get_object_or_404(LoopResult, pk=result_id)
-
     file = obj.summary_file.open('rb')
-
     response = FileResponse(file)
-
     response.content_type = 'text/csv'
     task_id = obj.task_loop_result.task_id
     loop_id = obj.loop_id
     response['Content-Disposition'] = f'attachment; filename="{task_id}_{loop_id}.csv"'
 
+    return response
+
+
+def download_raw_file(request, task_id):
+    obj = get_object_or_404(Task, task_id=task_id)
+    file = obj.counting_result_file.open('rb')
+    response = FileResponse(file)
+    response.content_type = 'text/csv'
+    response['Content-Disposition'] = f'attachment; filename="{obj.task_id}.txt"'
     return response
 
 
@@ -41,6 +50,29 @@ def download_video(request, task_id):
     filename = task.video_file.name.split('/')[-1]
     response = FileResponse(open(video_path, 'rb'), content_type='video/mp4')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+
+def download_all_file(request, task_id):
+    # Specify the directory containing the files to zip
+    directory_path = f"media/result/summary/{task_id}/"
+
+    # Create a zip file in memory
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as zip_file:
+        # Loop through each file in the directory and add it to the zip file
+        for file_name in os.listdir(directory_path):
+            file_path = os.path.join(directory_path, file_name)
+            if os.path.isfile(file_path):
+                zip_file.write(file_path, file_name)
+
+    # Generate the file name for the zip file
+    zip_file_name = f"{task_id}.zip"
+
+    # Create the HttpResponse object with the zip file as its content
+    response = HttpResponse(buffer.getvalue(), content_type="application/zip")
+    response["Content-Disposition"] = f"attachment; filename={zip_file_name}"
+
     return response
 
 
