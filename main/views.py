@@ -265,7 +265,7 @@ def call_detect(request, task_id):
     # task.task_result = TaskResult.objects.get(task_id=task_result)
     task.save()
 
-    return HttpResponse(task_result, content_type='application/json')
+    return redirect(reverse("main:dashboard"))
 
 
 def get_result(request, task_id):
