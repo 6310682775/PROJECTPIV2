@@ -132,6 +132,16 @@ def edit_task(request, task_id):
     return render(request, 'task/EditTask.html', {'form': form})
 
 
+def delete_task(request, task_id):
+    # Retrieve the task to delete
+    task = get_object_or_404(Task, task_id=task_id)
+
+    task.delete()
+
+    # Redirect the user to the task list page
+    return redirect(reverse("main:dashboard"))
+
+
 def new_loop(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     if request.method == 'POST':

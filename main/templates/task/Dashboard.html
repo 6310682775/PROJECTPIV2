@@ -18,6 +18,7 @@
         <th>edit_task</th>
         <th>edit-loop</th>
         <th>Result</th>
+        <th>Delete</th>
     </tr>
     </thead>
     <tbody>
@@ -67,7 +68,7 @@
                 </div>
             </td>
         {% endif %}
-        
+        <td><a href="{% url 'main:delete_task' task.task_id %}">DELETE</a></td>
     </tr>
     {% endfor %}
     </tbody>
