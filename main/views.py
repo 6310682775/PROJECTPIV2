@@ -54,22 +54,17 @@ def download_video(request, task_id):
 
 
 def download_all_file(request, task_id):
-    # Specify the directory containing the files to zip
     directory_path = f"media/result/summary/{task_id}/"
 
-    # Create a zip file in memory
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w") as zip_file:
-        # Loop through each file in the directory and add it to the zip file
         for file_name in os.listdir(directory_path):
             file_path = os.path.join(directory_path, file_name)
             if os.path.isfile(file_path):
                 zip_file.write(file_path, file_name)
 
-    # Generate the file name for the zip file
     zip_file_name = f"{task_id}.zip"
 
-    # Create the HttpResponse object with the zip file as its content
     response = HttpResponse(buffer.getvalue(), content_type="application/zip")
     response["Content-Disposition"] = f"attachment; filename={zip_file_name}"
 
@@ -133,12 +128,11 @@ def edit_task(request, task_id):
 
 
 def delete_task(request, task_id):
-    # Retrieve the task to delete
+
     task = get_object_or_404(Task, task_id=task_id)
 
     task.delete()
 
-    # Redirect the user to the task list page
     return redirect(reverse("main:dashboard"))
 
 
@@ -200,20 +194,6 @@ def loops_to_json(task_id):
     return response_data
 
 
-def test_save_result(request, task_id):
-    task = Task.objects.get(pk=task_id)
-    counting_result_path = 'static/object_tracking15/loop.txt'
-    video_result_path = 'static/object_tracking15/video2.mp4'
-    counting_result_file = open(counting_result_path, 'rb')
-    video_file = open(video_result_path, 'rb')
-    task.video_result_file.save(os.path.basename(
-        video_result_path), video_file, save=True)
-    task.counting_result_file.save(os.path.basename(
-        counting_result_path), counting_result_file, save=True)
-    task.save()
-    return redirect(reverse("main:dashboard"))
-
-
 def call_detect(request, task_id):
     loopfile_demo = {
         "loops": [
@@ -271,15 +251,11 @@ def call_detect(request, task_id):
 def get_result(request, task_id):
     loop_count = 3
     task = Task.objects.get(pk=task_id)
-    # vehicle_counts = []
-    # loop_results = []
     results = []
     for i in range(loop_count):
         vehicle_count = VehicleCount.objects.filter(
             loop_result__loop_id=i, loop_result__task_loop_result__task_id=task.task_id)
         loop_result = LoopResult.objects.get(
             loop_id=i, task_loop_result__task_id=task.task_id)
-        # vehicle_counts.append(vehicle_count)
-        # loop_results.append(loop_result)
         results.append((vehicle_count, loop_result))
     return render(request, 'task/CountingResult.html', {'results': results, 'task': task})

@@ -25,5 +25,3 @@ urlpatterns = [
          views.download_raw_file, name='download_raw_file'),
     path('detection/<int:task_id>/', views.call_detect, name='call_detect'),
 ]
-# path('task/result/<int:task_id>/',
-#      views.test_save_result, name='test_save_result'),

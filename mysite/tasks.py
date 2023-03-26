@@ -1,6 +1,6 @@
 from celery import shared_task
 from detect_and_track import mymain
-from main.models import Task, LoopResult, VehicleCount
+from main.models import Task, LoopResult, VehicleCount, Loop
 import os
 
 
@@ -20,8 +20,9 @@ def run_detect(vdofile, loopfile, task_id):
     video_file.close()
     all_loop = []
 
-    # loops = Loop.objects.filter(head_task__pk=task_id)
-    loop_count = 3
+    loops = Loop.objects.filter(
+        head_task__task_id=task.task_id)
+    loop_count = loops.count()
     for i in range(loop_count):
         vehicle_counts = {
             "Bus": {"ENTERED": 0, "STRAIGHT": 0, "RIGHT": 0, "LEFT": 0},
@@ -49,8 +50,6 @@ def run_detect(vdofile, loopfile, task_id):
                 vehicle_type = field[2]
                 direction = field[4]
                 all_loop[i][vehicle_type][direction] += 1
-
-    task = Task.objects.get(pk=task_id)
 
     for i in range(loop_count):
         loop_result = LoopResult.objects.create(
