@@ -14,7 +14,7 @@ from django.core.files.base import ContentFile
 import os
 from django_celery_results.models import TaskResult
 from celery.result import AsyncResult
-
+from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 import os
@@ -56,23 +56,21 @@ def login_view(request):
             return render(request, 'authenticate/home.html')
         else:
             messages.info(request, "Username or Password is incorrect.")
+    return render(request, 'authenticate/login.html')
 
 
-# @login_required
+@login_required
 def logout_view(request):
     logout(request)
     return redirect('main:login')
 
-# @login_required
 
-
-# @login_required
+@login_required
 def home_page(request):
     return render(request, 'authenticate/home.html')
 
-# @login_required
 
-
+@login_required
 def account_page(request):
     username = request.user.username
     context = {'name': username}
@@ -80,12 +78,14 @@ def account_page(request):
 # @login_required
 
 
+@login_required
 def account_page(request):
     username = request.user.username
     context = {'name': username}
     return render(request, 'authenticate/account.html', context)
 
 
+@login_required
 def download_file(request, result_id):
     obj = get_object_or_404(LoopResult, pk=result_id)
     file = obj.summary_file.open('rb')
@@ -98,6 +98,7 @@ def download_file(request, result_id):
     return response
 
 
+@login_required
 def download_raw_file(request, task_id):
     obj = get_object_or_404(Task, task_id=task_id)
     file = obj.counting_result_file.open('rb')
@@ -107,6 +108,7 @@ def download_raw_file(request, task_id):
     return response
 
 
+@login_required
 def download_video(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     video_path = task.video_result_file.path
@@ -116,6 +118,7 @@ def download_video(request, task_id):
     return response
 
 
+@login_required
 def download_all_file(request, task_id):
     directory_path = f"media/result/summary/{task_id}/"
 
@@ -134,6 +137,7 @@ def download_all_file(request, task_id):
     return response
 
 
+@login_required
 def dashboard(request):
     tasks = Task.objects.all()
     task_status_data = []
@@ -159,6 +163,7 @@ def dashboard(request):
     return render(request, 'task/Dashboard.html', {'tasks': task_status_data})
 
 
+@login_required
 def check_result(request):
     task_id = request.GET.get('task_id')
     task_result = AsyncResult(task_id)
@@ -168,6 +173,7 @@ def check_result(request):
         return HttpResponse("processing")
 
 
+@login_required
 def new_task(request):
     if request.method == 'POST':
         form = TaskForm(request.POST, request.FILES)
@@ -179,6 +185,7 @@ def new_task(request):
     return render(request, 'task/NewTask.html', {'form': form})
 
 
+@login_required
 def edit_task(request, task_id):
     task = get_object_or_404(Task, task_id=task_id)
     if request.method == 'POST':
@@ -191,6 +198,7 @@ def edit_task(request, task_id):
     return render(request, 'task/EditTask.html', {'form': form})
 
 
+@login_required
 def delete_task(request, task_id):
 
     task = get_object_or_404(Task, task_id=task_id)
@@ -200,6 +208,7 @@ def delete_task(request, task_id):
     return redirect(reverse("main:dashboard"))
 
 
+@login_required
 def new_loop(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     if request.method == 'POST':
@@ -214,6 +223,7 @@ def new_loop(request, task_id):
     return render(request, 'loop/NewLoop.html', {'form': form, 'task_id': task_id})
 
 
+@login_required
 def edit_loop(request, loop_id):
     loop = get_object_or_404(Loop, pk=loop_id)
     if request.method == 'POST':
@@ -226,6 +236,17 @@ def edit_loop(request, loop_id):
     return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk})
 
 
+@login_required
+def delete_loop(request, loop_id):
+
+    loop = get_object_or_404(Loop, pk=loop_id)
+
+    loop.delete()
+
+    return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
+
+
+@login_required
 def loop_dashboard(request, task_id):
     loops = Loop.objects.filter(head_task__pk=task_id)
     return render(request, 'loop/LoopDashboard.html', {'loops': loops, 'task_id': task_id})
@@ -258,6 +279,7 @@ def loops_to_json(task_id):
     return response_data
 
 
+@login_required
 def call_detect(request, task_id):
     loopfile_demo = {
         "loops": [
@@ -312,6 +334,7 @@ def call_detect(request, task_id):
     return redirect(reverse("main:dashboard"))
 
 
+@login_required
 def get_result(request, task_id):
     loop_count = 3
     task = Task.objects.get(pk=task_id)

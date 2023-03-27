@@ -1,11 +1,30 @@
+
+
 {% extends 'base.html' %}
 
 {% block content %}
-<a href="{% url 'main:dashboard'  %}">back</a>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Finish Task</button>
-</form>
-{% endblock %}
+<style>
+    .center5{
+        text-align: center;
+        margin-left: 600px ;
+        background-color: #df1c44;
+        color: white;
+    }
 
+    .btn-succes5{
+        background-color: #fecf6a;
+        color: white;
+    }
+
+</style>
+
+<section class="new-task-form" >
+    <h1 style="text-align: center;">Edit Task</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    <a class="btn btn-succes5 new-task-back" href="{% url 'main:dashboard'  %}" role="button">back</a>
+</section>
+{% endblock %}
