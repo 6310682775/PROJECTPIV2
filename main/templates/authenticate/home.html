@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <title>Genius Traffic</title>
+  <style>
+    body {
+      flex-direction: column;
+      align-items: center;
+     }
+
+
+    .user-info, .access_box{
+      text-align: center;
+    }
+    
+
+    .trafficmonitor-navbar {
+      width: 100%;
+      display: block;
+    }
+
+    .button {
+        width: 200px;
+        margin-bottom: 15px;
+    }
+
+    .button a {
+        color: red;
+      }
+
+  </style> 
+
+    </head>
+    <body>
+        {% include "navbar.html" %}
+
+    <section class="access_box">
+      <div><h2 class="access">Menu Task</h2></div>
+      <div>
+        <a href="{% url 'main:dashboard'  %}"><button class="button"><span style="color:red;">Task dashboard</span></button></a>
+      </div>
+      <div>
+        <a href="{% url 'main:new_task'  %}"><button class="button"><span style="color:red;">Add New Task</span></button></a>
+      </div>
+
+    </section>
+
+  </body>
+</html>

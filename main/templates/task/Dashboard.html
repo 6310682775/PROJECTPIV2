@@ -1,77 +1,172 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Task Dashboard</h1>
+<style>
 
-<a href="{% url 'main:new_task'  %}">New Task</a>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Date Time</th>
-        <th>Location</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>task_id_celery</th>
-        <th>Video File</th>
-        <th>Time</th>
-        <th>edit_task</th>
-        <th>edit-loop</th>
-        <th>Result</th>
-        <th>Delete</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for task in tasks %}
-    <tr>
-        <td>{{ task.task_id }}</td>
-        <td>{{ task.date_time }}</td>
-        <td>{{ task.location }}</td>
-        <td>{{ task.description }}</td>
-        <td>
-        {{ task.status }}
-        </td>
-        <td>
-            {{ task.task_id_celery }}
-        </td>
-        <td><video width="470" height="255" src="{{ task.video_file.url }}" controls></video></td>
-        <td>{{ task.time }}</td>
-        <td><a href="{% url 'main:edit_task' task.task_id %}">Edit Task</a></td>
-        <td><a href="{% url 'main:loop_dashboard' task.task_id %}">Edit Loop</a></td>
-        {% if task.status == "SUCCESS" %}
-            <td><a href="{% url 'main:get_result' task.task_id %}">Result</a></td>
-        {% else %}
-            <td><p>WAIT FOR PROCESS</p></td>
-        {% endif %}
-        {% if task.status == "UNPROCESS" %}
+form {
+  float: left;
+
+}
+
+tr, td{
+    text-align: center;
+}
+
+
+input[type="text"]{
+  height: 5%;
+  padding: 1rem;
+  border: none;
+  width: 250px;
+  border-radius: 0.25rem;
+  margin-right: 0.5rem;
+}
+
+button {
+  height: 5%;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  margin-right: 0;
+}
+
+button[type="submit"], .new-task-btn {
+  background-color: #df1c44;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  float: right;
+}
+
+button[type="submit"]:hover, .new-task-btn:hover {
+  background-color: #fecf6a;
+}
+
+.btn-warning {
+  background-color: #ffc107; /* Change this value to the desired color */
+  color: #fff; 
+  border-color: #ffc107; 
+}
+
+.btn-danger {
+  background-color: #dc3545; 
+  color: #fff; 
+  border-color: #dc3545;
+}
+
+
+.new-task-btn a {
+  color: #fff; 
+}
+
+.container::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.center {
+    margin-left: 270px;
+    margin-right: auto;
+    text-align: center;
+}
+
+
+@media screen and (min-width: 768px) {
+    .largenav {
+        display: block
+    }
+
+    .smallnav {
+        display: none
+    }
+
+    .smallsearch {
+        margin: 0px
+    }
+}
+</style>
+</head>
+<section class="d-flex align-items-center">
+    <h1 class="text-center">Dashboard</h1>
+    <br>
+    <div class="container">
+        <form>
+          <input type="text" placeholder="Search...">
+          <button type="submit">Search</button>
+        </form>
+        <button class="new-task-btn"><a href="{% url 'main:new_task'  %}">New Task</a></button>
+      </div>
+    <!-- <button class="new-task-btn"><a href="{% url 'main:new_task'  %}">New Task</a></button> -->
+</section>
+<br>
+<br>
+<section class="center">
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Date Time</th>
+            <th scope="col">Location</th>
+            <th scope="col">Description</th>
+            <th scope="col">Status</th>
+            <th scope="col">Time</th>
+            <th scope="col">Edit Task</th>
+            <th scope="col">Edit Loop</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Action</th>
+            <th scope="col">Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.task_id }}</td>
+            <td>{{ task.date_time }}</td>
+            <td>{{ task.location }}</td>
+            <td>{{ task.description }}</td>
             <td>
-                <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
-                    {% csrf_token %}
-                    <div>
-                        <button type="submit">Send Task</button>
-                    </div>
-                </form>
+            {{ task.status }}
             </td>
-        {% elif task.status == "FAILURE" %}
-        <td>
-            <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
-                {% csrf_token %}
-                <div>
-                    <button type="submit">RESEND TASK</button>
-                </div>
-            </form>
-        </td>
-        {% else %}
+            <td>{{ task.time }}</td>
             <td>
-                <div>
-                    <p>SENDED</p>
-                </div>
+                <a class="btn btn-warning" href="{% url 'main:edit_task' task.task_id %}" role="button">Edit</a>
             </td>
-        {% endif %}
-        <td><a href="{% url 'main:delete_task' task.task_id %}">DELETE</a></td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+            <td>
+                <a class="btn btn-warning" href="{% url 'main:loop_dashboard' task.task_id %}" role="button">Edit Loop</a>
+            </td>
+            <td>
+                <a class="btn btn-danger" href="{% url 'main:delete_task' task.task_id %}" role="button">Delete</a>
+            </td>
+            {% if task.status == "UNPROCESS" %}
+                <td>
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
+                        {% csrf_token %}
+                        <div>
+                            <button type="submit">Send Task</button>
+                        </div>
+                    </form>
+                </td>
+                {% else %}
+                <td><button type="button" class="btn btn-secondary">Send Task</button>
+                </td>
+                {% endif %}
+            {% if task.status == "SUCCESS" %}
+                <td><a class="btn btn-warning" href="{% url 'main:get_result' task.task_id %}">RESULT</a></td>
+            {% else %}
+                <td><p>WAIT FOR PROCESS</p></td>
+            {% endif %}
+            
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    
+
+</section>
+
 
 {% endblock %}

@@ -24,4 +24,9 @@ urlpatterns = [
     path('task/result/download/file/raw/<int:task_id>',
          views.download_raw_file, name='download_raw_file'),
     path('detection/<int:task_id>/', views.call_detect, name='call_detect'),
+    path('login', views.login_view, name='login'),
+    path('signup', views.signup_view, name='signup'),
+    path('logout', views.logout_view, name='logout'),
+    path('home', views.home_page, name='home'),
+    path('account', views.account_page, name='account_page'),
 ]

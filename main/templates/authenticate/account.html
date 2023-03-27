@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <title>Home</title>
+  <style>
+    body {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .user-info, .access_box, div {
+      text-align: center;
+    }
+
+    .trafficmonitor-navbar {
+      width: 100%;
+      display: block;
+    }
+
+    .button {
+        width: 200px;
+        margin-bottom: 15px;
+    }
+
+  </style> 
+
+    </head>
+    <body>
+      {% include "navbar.html" %}
+    <div class="user-info"> 
+      <h1>Welcome</h1>
+      <p>Name: {{ name }}</p>
+    </div>
+
+    <section class="access_box">
+      <div><h2 class="access">Access</h2></div>
+      <div>
+        <a href="dashboard"><button class="button"><span style="color:red;">Upload video and information</span></button></a>
+      </div>
+      <div>
+        <a href="dashboard"><button class="button"><span style="color:red;">View task dashboard</span></button></a>
+      </div>
+      <div>
+        <a href="dashboard"><button class="button"><span style="color:red;">Manage data</span></button></a>
+      </div>
+      <div>
+        <a href="dashboard"><button class="button"><span style="color:red;">Search for data</span></button></a>
+      </div>
+      <div>
+        <a href="dashboard"><button class="button"><span style="color:red;">View data</span></button></a>
+      </div>
+      <div>
+        <a href="home"><button class="button"><span style="color:red;">Back to home</span></button></a>
+      </div>
+    </section>
+
+  </body>
+</html>

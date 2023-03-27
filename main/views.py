@@ -21,6 +21,69 @@ import os
 import zipfile
 from django.http import HttpResponse
 import io
+from .forms import CreateUserForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
+
+
+def signup_view(request):
+    if (request.user.is_authenticated):
+        return redirect('main:home')
+    else:
+        form = CreateUserForm()
+        if (request.method == 'POST'):
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data.get('username')
+                messages.success(
+                    request, 'Successful you can login as username: ' + user)
+                return redirect('main:login')
+
+        context = {'form': form}
+        return render(request, 'authenticate/signup.html', context)
+
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return render(request, 'authenticate/home.html')
+        else:
+            messages.info(request, "Username or Password is incorrect.")
+
+
+# @login_required
+def logout_view(request):
+    logout(request)
+    return redirect('main:login')
+
+# @login_required
+
+
+# @login_required
+def home_page(request):
+    return render(request, 'authenticate/home.html')
+
+# @login_required
+
+
+def account_page(request):
+    username = request.user.username
+    context = {'name': username}
+    return render(request, 'authenticate/account.html', context)
+# @login_required
+
+
+def account_page(request):
+    username = request.user.username
+    context = {'name': username}
+    return render(request, 'authenticate/account.html', context)
 
 
 def download_file(request, result_id):
@@ -88,6 +151,7 @@ def dashboard(request):
             'description': task.description,
             'date_time': task.date_time,
             'status': status,
+            'time': task.time,
             'task_id_celery': task.task_id_celery,
             'video_file': task.video_file,
         })

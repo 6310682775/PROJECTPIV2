@@ -2,21 +2,247 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <!-- jQuery library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <style>
+
+        h1.loop-header {
+            text-align: center;
+        }
+
         table, th, td {
             border: 1px solid black;
             border-collapse: collapse;
             padding: .5em;
         }
+
+        .new-loop-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .new-task-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn-new-loop{
+            margin-left: 1100px;
+            margin-top: 70px;
+            margin-bottom: 10px;
+            background-color: #00C853;
+            border-color: #00C853;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #fff; 
+            border-color: #ffc107; 
+        }
+
+        .btn-danger {
+            background-color: #dc3545; 
+            color: #fff; 
+            border-color: #dc3545;
+        }
+
+        .btn-success {
+            margin-left: 1100px;
+            margin-bottom: 10px;
+            background-color: #00C853;
+            border-color: #00C853;
+        }
+
+        .btn-success1 {
+            margin-left: 1150px;
+            margin-bottom: 10px;
+            background-color: #00C853;
+            border-color: #00C853;
+        }
+
+        .table-edit{
+            color: red;
+        }
+
+        .video-section{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+
+        .video-edit{
+            margin: 0px 290px;
+        }
+
+    body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+    body {
+        background-color: #f7f7f7;
+    }
+
+    .navbar {
+        background-color: #df1c44;
+        color: #df1c44;
+        border-radius: 0px;
+    }
+
+    .row1 {
+        padding-top: 10px;
+        padding-right: 50px;
+    }
+
+
+    .upper-links {
+        display: inline-block;
+        padding: 0 11px;
+        line-height: 23px;
+        font-family: 'Roboto', sans-serif;
+        letter-spacing: 0;
+        color: inherit;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        font-size: 12px
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 0px
+    }
+
+    .dropdown:hover {
+        background-color: #fff
+    }
+
+    .dropdown:hover .links {
+        color: #000
+    }
+
+    .dropdown:hover .dropdown-menu {
+        display: block
+    }
+
+    .dropdown .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        display: none;
+        background-color: #fff;
+        color: #333;
+        left: 0px;
+        border: 0;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px -3px #555454;
+        margin: 0.5px;
+        padding: 0px
+    }
+
+    .links {
+        color: #fff;
+        text-decoration: none
+    }
+
+    .links:hover {
+        color: #fff;
+        text-decoration: none
+    }
+
+    .profile-links {
+        font-size: 12px;
+        font-family: 'Roboto', sans-serif;
+        box-sizing: border-box;
+        border-radius: 5px;
+        display: block;
+        padding: 0 11px;
+        line-height: 23px
+    }
+
+    .profile-li {
+        padding-top: 2px
+    }
+
+    .largenav {
+        display: none
+    }
+
+    .smallnav {
+        display: block
+    }
+
+
+    .menu {
+        cursor: pointer
+    }
+
+
+    @media screen and (min-width: 768px) {
+        .largenav {
+            display: block
+        }
+
+        .smallnav {
+            display: none
+        }
+
+        .smallsearch {
+            margin: 0px
+        }
+    }
     </style>
     <title>{% block title %}My Website{% endblock %}</title>
 </head>
+
 <body>
     <header>
-        <nav>
-            <!-- navigation menu goes here -->
-        </nav>
+            <nav class="top-bar fixed">
+                <div class="navbar">
+                    <div class="container">
+                        <div class="row row1">
+                            <div class="col-sm-3">
+                                <h2 style="margin:0px;"><a style="text-decoration:none; color:white;" href="home"><span class="largenav">Trafficmonitor </span></a></h2>
+                            </div>
+                            <ul class="largenav pull-right">
+                              <li class="upper-links dropdown"><a class="links" href="">My Account</a>
+                                  <ul class="dropdown-menu">
+                                      
+                                      <li class="profile-li"><a class="profile-links" href="/account">My Profile</a></li> 
+                                      <li class="profile-li"><a class="profile-links" href="/logout">Logout</a></li>
+                                  </ul>
+                              </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <script>
+                $(document).ready(function(){
+                
+                function openNav() {
+                document.getElementById("mySidenav").style.width = "70%";
+                
+                document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+                }
+                
+                function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+                document.body.style.backgroundColor = "rgba(0,0,0,0)";
+                }
+                
+                
+                });
+            </script>
+            <div class="container-fluid">
+                {% block body %} 
+                {% endblock %}
+            </div>
     </header>
     <main>
         {% block content %}
@@ -28,5 +254,3 @@
     </footer>
 </body>
 </html>
-
-

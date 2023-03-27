@@ -1,40 +1,197 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Task Dashboard</h1>
-<!-- <td><video width="470" height="255" src="{{ task.video_result_file.url}}" controls></video></td> -->
-<video width="470" height="255" controls>
-    <source src="{{ task.video_result_file.url }}" type="video/mp4">
-</video>
-  
-<p><a href="{% url 'main:download_video' task.task_id %}" download>Download Video Result</a></p>
-<p><a href="{% url 'main:download_all_file' task.task_id %}" download>Download All Loop Result</a></p>
-<p><a href="{% url 'main:download_raw_file' task.task_id %}" download>Download Raw Result</a></p>
-{% for vehicle_count,loop_result in results %}
-        <p>Loop {{loop_result.loop_id}}</p>
-        <a href="{% url 'main:download_file' result_id=loop_result.id %}">Download file</a>
-        <table>
-            <thead>
-            <tr>
-                <th>vehicle_type</th>
-                <th>entered</th>
-                <th>straight</th>
-                <th>right</th>
-                <th>left</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for vehicle in vehicle_count %}
+  <style>
+    body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+    body {
+        background-color: #f7f7f7;
+    }
+    
+    .navbar {
+        background-color: #df1c44;
+        color: #df1c44;
+        border-radius: 0px;
+    }
+    
+    .row1 {
+        padding-top: 10px;
+        padding-right: 50px;
+    }
+    
+    
+    .upper-links {
+        margin-left: 606px;
+        display: inline-block;
+        padding: 0 11px;
+        line-height: 23px;
+        font-family: 'Roboto', sans-serif;
+        letter-spacing: 0;
+        color: inherit;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        font-size: 12px
+    }
+    
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 0px
+    }
+    
+    .dropdown:hover {
+        background-color: #fff
+    }
+    
+    .dropdown:hover .links {
+        color: #000
+    }
+    
+    .dropdown:hover .dropdown-menu {
+        display: block
+    }
+    
+    .dropdown .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        display: none;
+        background-color: #fff;
+        color: #333;
+        left: 0px;
+        border: 0;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px -3px #555454;
+        margin: 0.5px;
+        padding: 0px
+    }
+    
+    .links {
+        color: #fff;
+        text-decoration: none
+    }
+    
+    .links:hover {
+        color: #fff;
+        text-decoration: none
+    }
+    
+    .profile-links {
+        font-size: 12px;
+        font-family: 'Roboto', sans-serif;
+        box-sizing: border-box;
+        border-radius: 5px;
+        display: block;
+        padding: 0 11px;
+        line-height: 23px
+    }
+    
+    .profile-li {
+        padding-top: 2px
+    }
+    
+    .largenav {
+        display: none
+    }
+    
+    .smallnav {
+        display: block
+    }
+    
+    
+    .menu {
+        cursor: pointer
+    }
+    
+    h1 {
+        text-align: center;
+        padding: 20px;
+    }
+    
+    h3 {
+        margin-left: 35px;
+    }
+    @media screen and (min-width: 768px) {
+        .largenav {
+            display: block
+        }
+    
+        .smallnav {
+            display: none
+        }
+    
+        .smallsearch {
+            margin: 0px
+        }
+    }
+
+    .download {
+        margin-left: 825px;
+    }
+
+    .tablecenter {
+        margin-top: 20px;
+        margin-left: 275px;
+        float: left;
+    }
+
+    .downloadbut {
+        background-color: #df1c44;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+    }
+
+    #outer
+    {
+        width:100%;
+        text-align: center;
+    }
+    .inner
+    {
+        display: inline-block;
+    }
+    </style>
+    <br>
+    <h1>Counting Result</h1><br>
+    <div id="outer">
+        <div class="inner"><a href="{% url 'main:download_video' task.task_id %}" download><button class="downloadbut">Download Video Result</button></a></div>
+        <div class="inner"><a href="{% url 'main:download_all_file' task.task_id %}" download><button class="downloadbut">Download Summary Result</button></a></div>
+            <div class="inner"><a href="{% url 'main:download_raw_file' task.task_id %}" download><button class="downloadbut">Download Raw Result</button></a></div>
+    </div>
+    <br>
+    {% for vehicle_count,loop_result in results %}
+    <section>
+        <div class="tablecenter">
+            <p>Loop {{loop_result.loop_id}}</p>
+            <table  class="table table-bordered">
+                <thead>
                 <tr>
-                    <td>{{ vehicle.vehicle_type }}</td>
-                    <td>{{ vehicle.entered }}</td>
-                    <td>{{ vehicle.straight }}</td>
-                    <td>{{ vehicle.right }}</td>
-                    <td>{{ vehicle.left }}</td>
+                    <th scope="col">Vehicle Type</th>
+                    <th scope="col">Entered</th>
+                    <th scope="col">Straight</th>
+                    <th scope="col">Right</th>
+                    <th scope="col">Left</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-{% endfor %}
+                </thead>
+                <tbody>
+                {% for vehicle in vehicle_count %}
+                    <tr>
+                        <td>{{ vehicle.vehicle_type }}</td>
+                        <td>{{ vehicle.entered }}</td>
+                        <td>{{ vehicle.straight }}</td>
+                        <td>{{ vehicle.right }}</td>
+                        <td>{{ vehicle.left }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </section>
+    {% endfor %}
+    <br>       
 
 {% endblock %}
