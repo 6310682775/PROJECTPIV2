@@ -8,5 +8,5 @@
 
 # ClASS DIAGRAM
 
-![ClASS DIAGRAM](https://drive.google.com/file/d/1Uq4LzrP7XZmpJR2l_A1Mtasie4Oipar_/view?usp=sharing)
-![ClASS DIAGRAM](https://drive.google.com/file/d/1Uq4LzrP7XZmpJR2l_A1Mtasie4Oipar_/view?usp=sharing)
+![Example Image](https://drive.google.com/file/d/1Uq4LzrP7XZmpJR2l_A1Mtasie4Oipar_/view?usp=share_link)
+![Example Image](https://drive.google.com/file/d/1Uq4LzrP7XZmpJR2l_A1Mtasie4Oipar_/view?usp=share_link)
