@@ -17,7 +17,6 @@ def run_detect(vdofile, loopfile, task_id):
 
 def adapter_func(task_id, counting_result_path, video_result_path):
     task = Task.objects.get(pk=task_id)
-    # counting_result_path, video_result_path = saved_result
     counting_result_file = open(counting_result_path, 'rb')
     video_file = open(video_result_path, 'rb')
     task.video_result_file.save(f"{task_id}.mp4", video_file, save=True)

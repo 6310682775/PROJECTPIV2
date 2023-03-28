@@ -59,9 +59,6 @@ def login_view(request):
             messages.info(request, "Username or Password is incorrect.")
     return render(request, 'authenticate/login.html')
 
-    # return render(request, 'authenticate/login.html', context)
-    return render(request, 'authenticate/login.html')
-
 
 @login_required
 def logout_view(request):
@@ -233,6 +230,16 @@ def edit_loop(request, loop_id):
     else:
         form = LoopForm(instance=loop)
     return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk})
+
+
+@login_required
+def delete_loop(request, loop_id):
+
+    loop = get_object_or_404(Loop, pk=loop_id)
+
+    loop.delete()
+
+    return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
 
 
 def loop_dashboard(request, task_id):
