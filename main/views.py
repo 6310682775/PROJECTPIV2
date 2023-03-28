@@ -57,6 +57,7 @@ def login_view(request):
             return render(request, 'authenticate/home.html')
         else:
             messages.info(request, "Username or Password is incorrect.")
+    return render(request, 'authenticate/login.html')
 
     # return render(request, 'authenticate/login.html', context)
     return render(request, 'authenticate/login.html')
@@ -72,15 +73,11 @@ def logout_view(request):
 def home_page(request):
     return render(request, 'authenticate/home.html')
 
-# @login_required
 
-
-@login_required
 def account_page(request):
     username = request.user.username
     context = {'name': username}
     return render(request, 'authenticate/account.html', context)
-# @login_required
 
 
 @login_required
@@ -164,11 +161,9 @@ def dashboard(request):
             'task_id_celery': task.task_id_celery,
             'video_file': task.video_file,
         })
-
     return render(request, 'task/Dashboard.html', {'tasks': task_status_data})
 
 
-@login_required
 def check_result(request):
     task_id = request.GET.get('task_id')
     task_result = AsyncResult(task_id)
@@ -178,7 +173,6 @@ def check_result(request):
         return HttpResponse("processing")
 
 
-@login_required
 def new_task(request):
     if request.method == 'POST':
         form = TaskForm(request.POST, request.FILES)
@@ -241,7 +235,6 @@ def edit_loop(request, loop_id):
     return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk})
 
 
-@login_required
 def loop_dashboard(request, task_id):
     loops = Loop.objects.filter(head_task__pk=task_id)
     return render(request, 'loop/LoopDashboard.html', {'loops': loops, 'task_id': task_id})
@@ -323,7 +316,6 @@ def call_detect(request, task_id):
     vdofile = task.video_file.url.lstrip('/')
     task_result = run_detect.delay(vdofile, loopfile, task_id)
     task.task_id_celery = task_result.task_id
-    # task.task_result = TaskResult.objects.get(task_id=task_result)
     task.save()
 
     return redirect(reverse("main:dashboard"))

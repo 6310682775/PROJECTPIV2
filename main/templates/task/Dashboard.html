@@ -117,7 +117,6 @@ button[type="submit"]:hover, .new-task-btn:hover {
             <th scope="col">Edit Loop</th>
             <th scope="col">Delete</th>
             <th scope="col">Action</th>
-            <th scope="col">Result</th>
         </tr>
         </thead>
         <tbody>
@@ -149,14 +148,19 @@ button[type="submit"]:hover, .new-task-btn:hover {
                         </div>
                     </form>
                 </td>
-                {% else %}
-                <td><button type="button" class="btn btn-secondary">Send Task</button>
+            {% elif task.status == "FAILURE" %}
+                <td>
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
+                        {% csrf_token %}
+                        <div>
+                            <button type="submit">Send Task</button>
+                        </div>
+                    </form>
                 </td>
-                {% endif %}
-            {% if task.status == "SUCCESS" %}
+            {% elif task.status == "SUCCESS" %}
                 <td><a class="btn btn-warning" href="{% url 'main:get_result' task.task_id %}">RESULT</a></td>
             {% else %}
-                <td><p>WAIT FOR PROCESS</p></td>
+                <td><button type="button" class="btn btn-secondary">Sended</button></td>
             {% endif %}
             
         </tr>

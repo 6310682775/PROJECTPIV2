@@ -6,6 +6,7 @@ from django.urls import path, include
 app_name = 'main'
 
 urlpatterns = [
+    path('', views.dashboard, name='dashboard'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('task/new/', views.new_task, name='new_task'),
     path('task/edit/<int:task_id>/', views.edit_task, name='edit_task'),
@@ -13,6 +14,7 @@ urlpatterns = [
     path('task/<int:task_id>/loop', views.loop_dashboard, name='loop_dashboard'),
     path('loop/new/<int:task_id>', views.new_loop, name='new_loop'),
     path('loop/edit/<int:loop_id>/', views.edit_loop, name='edit_loop'),
+    path('loop/delete/<int:loop_id>/', views.delete_loop, name='delete_loop'),
     path('task/result/<int:task_id>/',
          views.get_result, name='get_result'),
     path('task/result/download/file/<int:result_id>',
