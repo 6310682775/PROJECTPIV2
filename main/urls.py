@@ -6,7 +6,7 @@ from django.urls import path, include
 app_name = 'main'
 
 urlpatterns = [
-    path('', views.dashboard, name='dashboard'),
+    path('dashboard', views.dashboard, name='dashboard'),
     path('task/new/', views.new_task, name='new_task'),
     path('task/edit/<int:task_id>/', views.edit_task, name='edit_task'),
     path('task/delete/<int:task_id>/', views.delete_task, name='delete_task'),
