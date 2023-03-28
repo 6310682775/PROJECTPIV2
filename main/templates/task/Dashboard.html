@@ -130,21 +130,20 @@ button[type="submit"]:hover, .new-task-btn:hover {
             {{ task.status }}
             </td>
             <td>{{ task.time }}</td>
-            {% if task.status == "UNPROCESS" %}
+            {% if task.status == "UNPROCESS" or task.status == "FAILURE"  %}
                 <td>
                     <a class="btn btn-warning" href="{% url 'main:edit_task' task.task_id %}" role="button">Edit</a>
                 </td>
                 <td>
                     <a class="btn btn-warning" href="{% url 'main:loop_dashboard' task.task_id %}" role="button">Edit Loop</a>
                 </td>
-                <td>
-                    <a class="btn btn-danger" href="{% url 'main:delete_task' task.task_id %}" role="button">Delete</a>
-                </td>
             {% else %}
                 <td><button type="button" class="btn btn-secondary">Edit</button></td>
                 <td><button type="button" class="btn btn-secondary">Edit Loop</button></td>
-                <td><button type="button" class="btn btn-secondary">Delete</button></td>
             {% endif %}
+            <td>
+                <a class="btn btn-danger" href="{% url 'main:delete_task' task.task_id %}" role="button">Delete</a>
+            </td>
             {% if task.status == "UNPROCESS" %}
                 <td>
                     <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
@@ -159,7 +158,7 @@ button[type="submit"]:hover, .new-task-btn:hover {
                     <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
                         {% csrf_token %}
                         <div>
-                            <button type="submit">Send Task</button>
+                            <button type="submit">Resend Task</button>
                         </div>
                     </form>
                 </td>
@@ -173,7 +172,6 @@ button[type="submit"]:hover, .new-task-btn:hover {
         {% endfor %}
         </tbody>
     </table>
-    
 
 </section>
 
