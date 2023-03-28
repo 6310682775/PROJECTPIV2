@@ -14,7 +14,7 @@ from django.core.files.base import ContentFile
 import os
 from django_celery_results.models import TaskResult
 from celery.result import AsyncResult
-from django.contrib.auth.decorators import login_required
+
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 import os
@@ -24,6 +24,7 @@ import io
 from .forms import CreateUserForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 
 def signup_view(request):
@@ -75,7 +76,6 @@ def account_page(request):
     username = request.user.username
     context = {'name': username}
     return render(request, 'authenticate/account.html', context)
-# @login_required
 
 
 @login_required
@@ -159,18 +159,7 @@ def dashboard(request):
             'task_id_celery': task.task_id_celery,
             'video_file': task.video_file,
         })
-
     return render(request, 'task/Dashboard.html', {'tasks': task_status_data})
-
-
-@login_required
-def check_result(request):
-    task_id = request.GET.get('task_id')
-    task_result = AsyncResult(task_id)
-    if task_result.ready():
-        return HttpResponse("success")
-    else:
-        return HttpResponse("processing")
 
 
 @login_required
@@ -328,7 +317,6 @@ def call_detect(request, task_id):
     vdofile = task.video_file.url.lstrip('/')
     task_result = run_detect.delay(vdofile, loopfile, task_id)
     task.task_id_celery = task_result.task_id
-    # task.task_result = TaskResult.objects.get(task_id=task_result)
     task.save()
 
     return redirect(reverse("main:dashboard"))

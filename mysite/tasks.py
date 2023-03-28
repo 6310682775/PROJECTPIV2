@@ -8,8 +8,16 @@ import os
 def run_detect(vdofile, loopfile, task_id):
     saved_result = mymain(loopfile, cmd=False, custom_arg=[
                           '--source', vdofile])
-    task = Task.objects.get(pk=task_id)
     counting_result_path, video_result_path = saved_result
+
+    adapter_func(task_id, counting_result_path, video_result_path)
+
+    return saved_result
+
+
+def adapter_func(task_id, counting_result_path, video_result_path):
+    task = Task.objects.get(pk=task_id)
+    # counting_result_path, video_result_path = saved_result
     counting_result_file = open(counting_result_path, 'rb')
     video_file = open(video_result_path, 'rb')
     task.video_result_file.save(f"{task_id}.mp4", video_file, save=True)
@@ -89,17 +97,3 @@ def run_detect(vdofile, loopfile, task_id):
             f"{task_id}/{task_id}_{loop_id}.csv", csv_file, save=True)
 
         loop_result.save()
-    return saved_result
-
-
-def save_result_to_task(saved_result, task_id):
-    task = Task.objects.get(pk=task_id)
-    counting_result_path, video_result_path = saved_result
-    counting_result_file = open(counting_result_path, 'rb')
-    video_file = open(video_result_path, 'rb')
-    task.video_result_file.save(f"{task_id}.mp4", video_file, save=True)
-    task.counting_result_file.save(
-        f"{task_id}.txt", counting_result_file, save=True)
-    task.save()
-    counting_result_file.close()
-    video_file.close()
