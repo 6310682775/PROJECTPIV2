@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import DateTimeInput, TimeInput
 from django.core.exceptions import ValidationError
-
+from django.core.validators import MinValueValidator
 
 class TaskForm(forms.ModelForm):
     class Meta:
@@ -24,6 +24,20 @@ class TaskForm(forms.ModelForm):
         return video_file
 
 class LoopForm(forms.ModelForm):
+
+    loop_id = forms.IntegerField(validators=[MinValueValidator(0)])
+    x_1 = forms.DecimalField(validators=[MinValueValidator(0)])
+    y_1 = forms.DecimalField(validators=[MinValueValidator(0)])
+    x_2 = forms.DecimalField(validators=[MinValueValidator(0)])
+    y_2 = forms.DecimalField(validators=[MinValueValidator(0)])
+    x_3 = forms.DecimalField(validators=[MinValueValidator(0)])
+    y_3 = forms.DecimalField(validators=[MinValueValidator(0)])
+    x_4 = forms.DecimalField(validators=[MinValueValidator(0)])
+    y_4 = forms.DecimalField(validators=[MinValueValidator(0)])
+    summary_location_x = forms.DecimalField(validators=[MinValueValidator(0)])
+    summary_location_y = forms.DecimalField(validators=[MinValueValidator(0)])
+
+
     class Meta:
         model = Loop
         fields = ['loop_name', 'loop_id', 'orientation',
