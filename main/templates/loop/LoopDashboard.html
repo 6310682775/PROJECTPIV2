@@ -3,9 +3,70 @@
 
 {% block content %}
 <style>
-   a {
+
+    th{
+        text-align: center;
+    }
+
+    .video-section{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+
+    .video-edit{
+            margin-left: 25%;
+            margin-right: 5%;
+        }
+
+    .btn-new-loop{
+            margin-left: 70%;
+            margin-top: 2%;
+            margin-bottom: 2%;
+            background-color: grey;
+            border-color: grey;
+        }
+
+    .table-editloop{
+        text-align: center;
+        margin-right: 25%;
+        margin-left: auto;
+
+    }
+
+    .btn-create{
+        color: white;
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn-create:hover {
+        text-decoration: none;
+        color: black;
+        background-color: #dc3545;
+    }
+
+    .btn-back-loop{
+        margin-left: 73%;
+        margin-right: auto;
+        color: white;
+        background-color: #ffc107;
+        border: none;
+    }
+
+    .btn-warning{
+        color: white;
+        background-color: #ffc107;
+        border: none;
+    }
+
+    .btn-danger{
+        background-color: #dc3545;
         color: white;
     }
+
+
+
 </style>
 <h1 class="loop-header">Loop Dashboard</h1>
 <a href="{% url 'main:new_loop' task_id %}" class="btn btn-success btn-create btn-new-loop">+  New Loop</a>
@@ -16,7 +77,7 @@
     <video class="video-edit"  controls >
         <source src="{{ task.video_file.url }}" type="video/mp4">
     </video>
-    <div class="table-edit ml-3">
+    <div class="table-editloop">
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -39,5 +100,5 @@
         </table>
     </div>
 </div> 
-<a class="btn btn-success1 back-btn" href="{% url 'main:dashboard'  %}">back</a>
+<a class="btn btn-back-loop back-btn" href="{% url 'main:dashboard'  %}">back</a>
 {% endblock %}

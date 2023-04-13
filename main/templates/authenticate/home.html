@@ -32,7 +32,7 @@
 
     </head>
     <body>
-        {% include "navbar.html" %}
+        {% include "navbarwodrop.html" %}
 
     <section class="access_box">
       <div><h2 class="access">Menu Task</h2></div>
@@ -42,7 +42,12 @@
       <div>
         <a href="{% url 'main:new_task'  %}"><button class="button"><span style="color:red;">Add New Task</span></button></a>
       </div>
-
+      <div>
+        <a href="{% url 'main:account_page'  %}"><button class="button"><span style="color:red;">Go to my profile</span></button></a>
+      </div>
+      <div>
+        <a href="{% url 'main:logout'  %}"><button class="button"><span style="color:red;">Log out</span></button></a>
+      </div>
     </section>
 
   </body>

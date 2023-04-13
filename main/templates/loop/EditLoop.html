@@ -1,24 +1,35 @@
+{% extends 'base.html' %}
+
 {% block content %}
 <style>
-  .btn-succes{
-      text-align: center;
-      margin-left: 600px ;
-      background-color: #df1c44;
-      color: white;
-  }
 
-  .btn-succes3{
-      background-color: #fecf6a;
-      color: white;
-  }
+    h1{
+      text-align: center;
+    }
+
+    .new-loop-form button[type=submit]{
+        display: inline-block;
+        background-color: #44df1c;
+        color: white;
+        padding: 3px 8px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-left: 20%;
+    }
+    
 
 </style>
 <section class="new-loop-form" >
-    <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %} 
-    {{ form.as_p }}
-    <button type="submit">Edit Loop</button>
-  </form>
+    <h1>Edit Loop</h1>
+      <div class="form-loop">
+          <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %} 
+              {{ form.as_p }}
+              <button type="submit">Save</button>
+              <a class="btn btn-back-loop new-loop-back" href="{% url 'main:loop_dashboard' task_id %}">back</a>
+          </form>
+      </div>
 </section>
-<a class="btn btn-succes3 new-loop-back" href="{% url 'main:loop_dashboard' task_id %}">back</a>
+
 {% endblock %}

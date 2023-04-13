@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
@@ -13,8 +12,15 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <style>
 
+
         h1.loop-header {
             text-align: center;
+        }
+
+        .back-btn{
+            margin-left: 100px;
+            background-color: grey;
+            border-color: grey;
         }
 
         table, th, td {
@@ -23,179 +29,177 @@
             padding: .5em;
         }
 
-        .new-loop-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .new-task-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .btn-new-loop{
-            margin-left: 1100px;
-            margin-top: 70px;
-            margin-bottom: 10px;
-            background-color: #00C853;
-            border-color: #00C853;
-        }
-
-        .btn-warning {
-            background-color: #ffc107;
-            color: #fff; 
-            border-color: #ffc107; 
-        }
-
-        .btn-danger {
-            background-color: #dc3545; 
-            color: #fff; 
-            border-color: #dc3545;
-        }
-
-        .btn-success {
-            margin-left: 1100px;
-            margin-bottom: 10px;
-            background-color: #00C853;
-            border-color: #00C853;
-        }
-
-        .btn-success1 {
-            margin-left: 1150px;
-            margin-bottom: 10px;
-            background-color: #00C853;
-            border-color: #00C853;
-        }
-
         .table-edit{
-            color: red;
+            color: grey;
         }
 
-        .video-section{
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
+
+        body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+
+        body {
+            background-color: #f7f7f7;
         }
 
-        .video-edit{
-            margin: 0px 290px;
+        .navbar {
+            background-color: #df1c44;
+            color: #df1c44;
+            border-radius: 0px;
         }
 
-    body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-    body {
-        background-color: #f7f7f7;
-    }
-
-    .navbar {
-        background-color: #df1c44;
-        color: #df1c44;
-        border-radius: 0px;
-    }
-
-    .row1 {
-        padding-top: 10px;
-        padding-right: 50px;
-    }
+        .row1 {
+            padding-top: 10px;
+            padding-right: 50px;
+        }
 
 
-    .upper-links {
-        display: inline-block;
-        padding: 0 11px;
-        line-height: 23px;
-        font-family: 'Roboto', sans-serif;
-        letter-spacing: 0;
-        color: inherit;
-        border: none;
-        border-radius: 5px;
-        outline: none;
-        font-size: 12px
-    }
+        .upper-links {
+            display: inline-block;
+            padding: 0 11px;
+            line-height: 23px;
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 0;
+            color: inherit;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            font-size: 12px
+        }
 
-    .dropdown {
-        position: relative;
-        display: inline-block;
-        margin-bottom: 0px
-    }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 0px
+        }
 
-    .dropdown:hover {
-        background-color: #fff
-    }
+        .dropdown:hover {
+            background-color: #fff
+        }
 
-    .dropdown:hover .links {
-        color: #000
-    }
+        .dropdown:hover .links {
+            color: #000
+        }
 
-    .dropdown:hover .dropdown-menu {
-        display: block
-    }
-
-    .dropdown .dropdown-menu {
-        position: absolute;
-        top: 100%;
-        display: none;
-        background-color: #fff;
-        color: #333;
-        left: 0px;
-        border: 0;
-        border-radius: 5px;
-        box-shadow: 0 4px 8px -3px #555454;
-        margin: 0.5px;
-        padding: 0px
-    }
-
-    .links {
-        color: #fff;
-        text-decoration: none
-    }
-
-    .links:hover {
-        color: #fff;
-        text-decoration: none
-    }
-
-    .profile-links {
-        font-size: 12px;
-        font-family: 'Roboto', sans-serif;
-        box-sizing: border-box;
-        border-radius: 5px;
-        display: block;
-        padding: 0 11px;
-        line-height: 23px
-    }
-
-    .profile-li {
-        padding-top: 2px
-    }
-
-    .largenav {
-        display: none
-    }
-
-    .smallnav {
-        display: block
-    }
-
-
-    .menu {
-        cursor: pointer
-    }
-
-
-    @media screen and (min-width: 768px) {
-        .largenav {
+        .dropdown:hover .dropdown-menu {
             display: block
         }
 
-        .smallnav {
+        .dropdown .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            display: none;
+            background-color: #fff;
+            color: #333;
+            left: 0px;
+            border: 0;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px -3px #555454;
+            margin: 0.5px;
+            padding: 0px
+        }
+
+        .links {
+            color: #fff;
+            text-decoration: none
+        }
+
+        .links:hover {
+            color: #fff;
+            text-decoration: none
+        }
+
+        .profile-links {
+            font-size: 12px;
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+            border-radius: 5px;
+            display: block;
+            padding: 0 11px;
+            line-height: 23px
+        }
+
+        .profile-li {
+            padding-top: 2px
+        }
+
+        .largenav {
             display: none
         }
 
-        .smallsearch {
-            margin: 0px
+        .smallnav {
+            display: block
         }
-    }
+
+
+        .menu {
+            cursor: pointer
+        }
+        
+        .submit-cancel{
+            margin-top: 5px;
+            margin-left: 100px;
+        }
+
+        .cancel{
+          margin-left: 10px;  
+        }
+
+        
+        .new-task-form{
+            margin-top: 5%;
+            margin-left: 30%;
+            margin-right: 30%;
+        }
+
+        .new-loop-form{
+            margin-top: 2%;
+            margin-left: 30%;
+            margin-right: 30%;
+        }
+        
+        .form-loop{
+            margin-top: 5%;
+            margin-left: 25%;
+            margin-right: auto;
+        }
+
+        .form-task{
+            margin-left: 30%;
+            margin-right: auto;
+            margin-top: 3%;
+        }
+
+        .btn-back{
+            background-color: #ffc107;
+            color: white;
+            display: inline-block;
+            margin-left: 0;
+            padding: 3px 8px;
+        }
+
+
+        .btn-back-loop{
+            background-color: #ffc107;
+            color: white;
+            display: inline-block;
+            margin-left: 0;
+            padding: 3px 8px;
+        }
+
+        @media screen and (min-width: 768px) {
+            .largenav {
+                display: block
+            }
+
+            .smallnav {
+                display: none
+            }
+
+            .smallsearch {
+                margin: 0px
+            }
+        }
+
+
     </style>
     <title>{% block title %}My Website{% endblock %}</title>
 </head>
@@ -207,16 +211,22 @@
                     <div class="container">
                         <div class="row row1">
                             <div class="col-sm-3">
-                                <h2 style="margin:0px;"><a style="text-decoration:none; color:white;" href="home"><span class="largenav">Trafficmonitor </span></a></h2>
+                                <h2 style="margin:0px;"><a style="text-decoration:none; color:white;" href="/home"><span class="largenav">Trafficmonitor </span></a></h2>
                             </div>
                             <ul class="largenav pull-right">
-                              <li class="upper-links dropdown"><a class="links" href="">My Account</a>
-                                  <ul class="dropdown-menu">
-                                      
-                                      <li class="profile-li"><a class="profile-links" href="/account">My Profile</a></li> 
-                                      <li class="profile-li"><a class="profile-links" href="/logout">Logout</a></li>
-                                  </ul>
-                              </li>
+                                <li class="upper-links dropdown"><a class="links" href="">Task Dashboard</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="profile-li"><a class="profile-links" href="/dashboard">All Tasks</a></li>
+                                        <li class="profile-li"><a class="profile-links" href="/task/new/">New Task</a></li>
+                                    </ul>
+                                </li>
+                                
+                                <li class="upper-links dropdown"><a class="links" href="">My Account</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="profile-li"><a class="profile-links" href="/account">My Profile</a></li> 
+                                        <li class="profile-li"><a class="profile-links" href="/logout">Logout</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>
