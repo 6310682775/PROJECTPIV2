@@ -94,9 +94,10 @@ button[type="submit"]:hover, .new-task-btn:hover {
     <h1 class="text-center">Dashboard</h1>
     <br>
     <div class="container">
-        <form>
-          <input type="text" placeholder="Search...">
-          <button type="submit">Search</button>
+        <form method="get" action="{% url 'main:search' %}">
+            <input type="text" name="location" value="{{ query }}" placeholder="Search...">
+            <input type="date" name="date" value="{{ date }}" placeholder="Search by date...">
+            <button type="submit">Search</button>
         </form>
       </div>
     <button class="new-task-btn"><a href="{% url 'main:new_task'  %}">New Task</a></button>
@@ -104,6 +105,7 @@ button[type="submit"]:hover, .new-task-btn:hover {
 <br>
 <br>
 <section class="center">
+    {% if tasks %}
     <table>
         <thead>
         <tr>
@@ -172,8 +174,9 @@ button[type="submit"]:hover, .new-task-btn:hover {
         {% endfor %}
         </tbody>
     </table>
-
+    {% else %}
+    <p>No matching tasks found.</p>
+    {% endif %}
 </section>
-
 
 {% endblock %}

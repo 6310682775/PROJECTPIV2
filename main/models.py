@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django_celery_results.models import TaskResult
 # Create your models here.
+from django.core.validators import FileExtensionValidator
 
 
 class Task(models.Model):
@@ -18,6 +19,7 @@ class Task(models.Model):
     counting_result_file = models.FileField(
         upload_to='result/counting/', null=True)
     state = models.CharField(max_length=50)
+    image_file = models.ImageField(upload_to='images/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])], null=True)
 
 
 class LoopResult(models.Model):
@@ -54,6 +56,5 @@ class Loop(models.Model):
     y_4 = models.IntegerField()
     summary_location_x = models.IntegerField()
     summary_location_y = models.IntegerField()
-
     def __str__(self):
         return self.loop_name

@@ -13,9 +13,9 @@
 {% load static %}
 
 <div class="video-section">
-    <video class="video-edit"  controls >
-        <source src="{{ task.video_file.url }}" type="video/mp4">
-    </video>
+    
+    <!--<img src="{{ task.image_file.url }}" alt="Task Image" style="max-width: 30%; height: auto;">-->
+    <img src="data:image/jpeg;base64,{{ encoded_image }}" alt="Modified Image" style="max-width: 30%; height: auto;">
     <div class="table-edit ml-3">
         <table class="table table-bordered">
             <thead>
