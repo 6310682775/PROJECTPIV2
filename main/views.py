@@ -239,7 +239,7 @@ def dashboard(request):
         task_status_data.append({
             'task_id': task.task_id,
             'location': task.location,
-            'description': task.description,    
+            'description': task.description,
             'date_time': task.date_time,
             'status': status,
             'time': task.time,
@@ -418,3 +418,42 @@ def get_result(request, task_id):
             loop_id=i, task_loop_result__task_id=task.task_id)
         results.append((vehicle_count, loop_result))
     return render(request, 'task/CountingResult.html', {'results': results, 'task': task})
+
+def search(request):
+    tasks = Task.objects.all()
+
+    query = request.GET.get('location')
+    if query:
+        tasks = tasks.filter(location__icontains=query)
+
+    date = request.GET.get('date')
+    if date:
+        tasks = tasks.filter(date_time__icontains=date)
+        
+    task_status_data = []
+    for task in tasks:
+        if task.task_id_celery is not None:
+            task_result = AsyncResult(task.task_id_celery)
+            status = task_result.status
+            task = Task.objects.get(pk=task.pk)
+            task.state = status
+        else:
+            status = "UNPROCESS"
+        task_status_data.append({
+            'task_id': task.task_id,
+            'location': task.location,
+            'description': task.description,    
+            'date_time': task.date_time,
+            'status': status,
+            'time': task.time,
+            'task_id_celery': task.task_id_celery,
+            'video_file': task.video_file,
+        })
+    context = {
+        'tasks': task_status_data,
+        'query': query,
+        'date': date,
+    }
+
+    return render(request, 'task/Dashboard.html', context)
+
