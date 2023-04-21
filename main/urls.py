@@ -31,4 +31,5 @@ urlpatterns = [
     path('logout', views.logout_view, name='logout'),
     path('home', views.home_page, name='home'),
     path('account', views.account_page, name='account_page'),
+    path('notifications/', views.notifications, name='notifications'),
 ]
