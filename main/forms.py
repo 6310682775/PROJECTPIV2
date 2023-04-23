@@ -26,16 +26,16 @@ class TaskForm(forms.ModelForm):
 class LoopForm(forms.ModelForm):
 
     loop_id = forms.IntegerField(validators=[MinValueValidator(0)])
-    x_1 = forms.DecimalField(validators=[MinValueValidator(0)])
-    y_1 = forms.DecimalField(validators=[MinValueValidator(0)])
-    x_2 = forms.DecimalField(validators=[MinValueValidator(0)])
-    y_2 = forms.DecimalField(validators=[MinValueValidator(0)])
-    x_3 = forms.DecimalField(validators=[MinValueValidator(0)])
-    y_3 = forms.DecimalField(validators=[MinValueValidator(0)])
-    x_4 = forms.DecimalField(validators=[MinValueValidator(0)])
-    y_4 = forms.DecimalField(validators=[MinValueValidator(0)])
-    summary_location_x = forms.DecimalField(validators=[MinValueValidator(0)])
-    summary_location_y = forms.DecimalField(validators=[MinValueValidator(0)])
+    x_1 = forms.DecimalField(validators=[MinValueValidator(0)], initial = 900)
+    y_1 = forms.DecimalField(validators=[MinValueValidator(0)], initial = 600)
+    x_2 = forms.DecimalField(validators=[MinValueValidator(0)], initial = 900)
+    y_2 = forms.DecimalField(validators=[MinValueValidator(0)], initial = 300)
+    x_3 = forms.DecimalField(validators=[MinValueValidator(0)], initial = 400)
+    y_3 = forms.DecimalField(validators=[MinValueValidator(0)], initial = 300)
+    x_4 = forms.DecimalField(validators=[MinValueValidator(0)], initial = 400)
+    y_4 = forms.DecimalField(validators=[MinValueValidator(0)], initial = 600)
+    summary_location_x = forms.DecimalField(validators=[MinValueValidator(0)],initial=20)
+    summary_location_y = forms.DecimalField(validators=[MinValueValidator(0)],initial=20)
 
 
     class Meta:

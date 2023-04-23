@@ -14,7 +14,7 @@ from django.core.files.base import ContentFile
 import os
 from django_celery_results.models import TaskResult
 from celery.result import AsyncResult
-
+from datetime import datetime
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 import os
@@ -25,7 +25,137 @@ from .forms import CreateUserForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+import imageio.v3 as iio
+from django.conf import settings
+from PIL import Image, ImageDraw
+import base64
+from io import BytesIO
+import cv2
+import numpy as np
+media_url = settings.MEDIA_URL
+import matplotlib.pyplot as plt
 
+def preview_loop_image(task,loops,task_id):
+    image_path = task.image_file
+    image = Image.open(image_path)
+    
+    # Draw a box on the image if there are loops
+    if loops:
+        loopfile = loops_to_json(task_id)
+        img_array = np.array(image)
+        image_draw = draw_loops_test(img_array, loopfile)
+        image = Image.fromarray(image_draw)
+
+    # Set figure size
+    fig = plt.figure(figsize=(10,10))
+
+    # Plot the image with aspect ratio set to 'equal'
+    plt.imshow(np.array(image), aspect='equal')
+
+    # Set x and y axis scales
+    plt.xticks(ticks=range(0, image.size[0], 100))
+    plt.yticks(ticks=range(0, image.size[1], 100))
+
+    # Set x and y axis labels
+    plt.xlabel('X Scale')
+    plt.ylabel('Y Scale')
+
+    # Save the plot to a buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+
+    # Convert the buffer to a base64-encoded string
+    encoded_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+    return encoded_image
+
+
+def draw_loops_test(img, loopfile):
+        count_boxes = loopfile
+        loops = count_boxes["loops"]
+        for loop in loops:
+            pt0,pt1,pt2,pt3 = loop["points"]
+            
+            cv2.line(img, (pt0["x"],pt0["y"]),(pt1["x"],pt1["y"]),(255,0,0),2) #entering line
+            cv2.line(img, (pt1["x"],pt1["y"]),(pt2["x"],pt2["y"]),(255,255,0),2) #left line
+            cv2.line(img, (pt2["x"],pt2["y"]),(pt3["x"],pt3["y"]),(255,255,0),2) #straight
+            cv2.line(img, (pt3["x"],pt3["y"]),(pt0["x"],pt0["y"]),(255,255,0),2) #right
+            cv2.putText(img,loop["name"],(pt0["x"],pt0["y"]),cv2.FONT_HERSHEY_SIMPLEX, 0.6, [0, 255, 0], 2)
+        
+        return(img)
+
+
+def new_loop(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    loops = Loop.objects.filter(head_task__pk=task_id)
+
+    if request.method == 'POST':
+        form = LoopForm(request.POST)
+        if form.is_valid():
+            loop = form.save(commit=False)
+            loop.head_task = task
+            loop.save()
+            return redirect(reverse("main:loop_dashboard", args=(task_id,)))
+    else:
+        form = LoopForm(initial={'head_task': task})
+    
+    encoded_image = preview_loop_image(task,loops, task_id)
+
+    return render(request, 'loop/NewLoop.html', {'form': form, 'task_id': task_id,'encoded_image': encoded_image})
+
+
+
+def edit_loop(request, loop_id, task_id):
+    loop = get_object_or_404(Loop, pk=loop_id)
+    task = Task.objects.get(pk=task_id)
+    
+    encoded_image = preview_loop_image(task, loop, task_id)
+    
+    if request.method == 'POST':
+        form = LoopForm(request.POST, instance=loop)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
+    else:
+        form = LoopForm(instance=loop)
+    return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk,'encoded_image': encoded_image })
+
+
+def loop_dashboard(request, task_id):
+    loops = Loop.objects.filter(head_task__pk=task_id)
+    task = Task.objects.get(pk=task_id)
+    
+    encoded_image = preview_loop_image(task, loops, task_id)
+    
+    
+    return render(request, 'loop/LoopDashboard.html', {'loops': loops, 'task_id': task_id, 'task' : task, 'encoded_image': encoded_image})
+
+def new_task(request):
+    if request.method == 'POST':
+        form = TaskForm(request.POST, request.FILES)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.save()
+            
+            
+            video_file = task.video_file.path
+            img_path = os.path.join(settings.MEDIA_ROOT, 'result', 'images', f"{task.task_id}.png")
+
+           
+            for frame_count, frame in enumerate(iio.imiter(video_file)):
+                iio.imwrite(img_path, frame, format='png')
+                if frame_count ==0:
+                    break
+            
+            # save the image file path in the database
+            task.image_file = img_path
+            task.save()
+           
+            return redirect(reverse("main:dashboard"))
+    else:
+        form = TaskForm()
+    return render(request, 'task/NewTask.html', {'form': form})
 
 def signup_view(request):
     if (request.user.is_authenticated):
@@ -170,15 +300,7 @@ def check_result(request):
         return HttpResponse("processing")
 
 
-def new_task(request):
-    if request.method == 'POST':
-        form = TaskForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("main:dashboard"))
-    else:
-        form = TaskForm()
-    return render(request, 'task/NewTask.html', {'form': form})
+
 
 
 
@@ -204,35 +326,6 @@ def delete_task(request, task_id):
     return redirect(reverse("main:dashboard"))
 
 
-
-def new_loop(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
-    if request.method == 'POST':
-        form = LoopForm(request.POST)
-        if form.is_valid():
-            loop = form.save(commit=False)
-            loop.head_task = task
-            loop.save()
-            return redirect(reverse("main:loop_dashboard", args=(task_id,)))
-    else:
-        form = LoopForm(initial={'head_task': task})
-    return render(request, 'loop/NewLoop.html', {'form': form, 'task_id': task_id})
-
-
-
-def edit_loop(request, loop_id):
-    loop = get_object_or_404(Loop, pk=loop_id)
-    if request.method == 'POST':
-        form = LoopForm(request.POST, instance=loop)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
-    else:
-        form = LoopForm(instance=loop)
-    return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk})
-
-
-
 def delete_loop(request, loop_id):
 
     loop = get_object_or_404(Loop, pk=loop_id)
@@ -242,9 +335,7 @@ def delete_loop(request, loop_id):
     return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
 
 
-def loop_dashboard(request, task_id):
-    loops = Loop.objects.filter(head_task__pk=task_id)
-    return render(request, 'loop/LoopDashboard.html', {'loops': loops, 'task_id': task_id})
+
 
 
 def loops_to_json(task_id):
@@ -340,3 +431,42 @@ def get_result(request, task_id):
             loop_id=i, task_loop_result__task_id=task.task_id)
         results.append((vehicle_count, loop_result))
     return render(request, 'task/CountingResult.html', {'results': results, 'task': task})
+
+def search(request):
+    tasks = Task.objects.all()
+
+    query = request.GET.get('location')
+    if query:
+        tasks = tasks.filter(location__icontains=query)
+
+    date = request.GET.get('date')
+    if date:
+        tasks = tasks.filter(date_time__icontains=date)
+        
+    task_status_data = []
+    for task in tasks:
+        if task.task_id_celery is not None:
+            task_result = AsyncResult(task.task_id_celery)
+            status = task_result.status
+            task = Task.objects.get(pk=task.pk)
+            task.state = status
+        else:
+            status = "UNPROCESS"
+        task_status_data.append({
+            'task_id': task.task_id,
+            'location': task.location,
+            'description': task.description,    
+            'date_time': task.date_time,
+            'status': status,
+            'time': task.time,
+            'task_id_celery': task.task_id_celery,
+            'video_file': task.video_file,
+        })
+    context = {
+        'tasks': task_status_data,
+        'query': query,
+        'date': date,
+    }
+
+    return render(request, 'task/Dashboard.html', context)
+

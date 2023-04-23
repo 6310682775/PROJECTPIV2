@@ -13,7 +13,7 @@ urlpatterns = [
     path('task/delete/<int:task_id>/', views.delete_task, name='delete_task'),
     path('task/<int:task_id>/loop', views.loop_dashboard, name='loop_dashboard'),
     path('loop/new/<int:task_id>', views.new_loop, name='new_loop'),
-    path('loop/edit/<int:loop_id>/', views.edit_loop, name='edit_loop'),
+    path('loop/edit/<int:task_id>/<int:loop_id>/', views.edit_loop, name='edit_loop'),
     path('loop/delete/<int:loop_id>/', views.delete_loop, name='delete_loop'),
     path('task/result/<int:task_id>/',
          views.get_result, name='get_result'),
@@ -31,4 +31,5 @@ urlpatterns = [
     path('logout', views.logout_view, name='logout'),
     path('home', views.home_page, name='home'),
     path('account', views.account_page, name='account_page'),
+    path('search/', views.search, name='search'),
 ]
