@@ -35,6 +35,42 @@ import numpy as np
 media_url = settings.MEDIA_URL
 import matplotlib.pyplot as plt
 
+def preview_loop_image(task,loops,task_id):
+    image_path = task.image_file
+    image = Image.open(image_path)
+    
+    # Draw a box on the image if there are loops
+    if loops:
+        loopfile = loops_to_json(task_id)
+        img_array = np.array(image)
+        image_draw = draw_loops_test(img_array, loopfile)
+        image = Image.fromarray(image_draw)
+
+    # Set figure size
+    fig = plt.figure(figsize=(10,10))
+
+    # Plot the image with aspect ratio set to 'equal'
+    plt.imshow(np.array(image), aspect='equal')
+
+    # Set x and y axis scales
+    plt.xticks(ticks=range(0, image.size[0], 100))
+    plt.yticks(ticks=range(0, image.size[1], 100))
+
+    # Set x and y axis labels
+    plt.xlabel('X Scale')
+    plt.ylabel('Y Scale')
+
+    # Save the plot to a buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+
+    # Convert the buffer to a base64-encoded string
+    encoded_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+    return encoded_image
+
+
 def draw_loops_test(img, loopfile):
         count_boxes = loopfile
         loops = count_boxes["loops"]
@@ -63,37 +99,8 @@ def new_loop(request, task_id):
             return redirect(reverse("main:loop_dashboard", args=(task_id,)))
     else:
         form = LoopForm(initial={'head_task': task})
-    image_path = task.image_file
-    image = Image.open(image_path)
     
-    # Draw a box on the image if there are loops
-    if loops:
-        loopfile = loops_to_json(task_id)
-        img_array = np.array(image)
-        image_draw = draw_loops_test(img_array, loopfile)
-        image = Image.fromarray(image_draw)
-
-    # Set figure size
-    fig = plt.figure(figsize=(10,10))
-
-    # Plot the image with aspect ratio set to 'equal'
-    plt.imshow(np.array(image), aspect='equal')
-
-    # Set x and y axis scales
-    plt.xticks(ticks=range(0, image.size[0], 100))
-    plt.yticks(ticks=range(0, image.size[1], 100))
-
-    # Set x and y axis labels
-    plt.xlabel('X Scale')
-    plt.ylabel('Y Scale')
-
-    # Save the plot to a buffer
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight')
-    buf.seek(0)
-
-    # Convert the buffer to a base64-encoded string
-    encoded_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+    encoded_image = preview_loop_image(task,loops, task_id)
 
     return render(request, 'loop/NewLoop.html', {'form': form, 'task_id': task_id,'encoded_image': encoded_image})
 
@@ -103,38 +110,7 @@ def edit_loop(request, loop_id, task_id):
     loop = get_object_or_404(Loop, pk=loop_id)
     task = Task.objects.get(pk=task_id)
     
-    # Load the image file
-    image_path = task.image_file
-    image = Image.open(image_path)
-    
-    # Draw a box on the image if there are loops
-    if loop:
-        loopfile = loops_to_json(task_id)
-        img_array = np.array(image)
-        image_draw = draw_loops_test(img_array, loopfile)
-        image = Image.fromarray(image_draw)
-
-    # Set figure size
-    fig = plt.figure(figsize=(10,10))
-
-    # Plot the image with aspect ratio set to 'equal'
-    plt.imshow(np.array(image), aspect='equal')
-
-    # Set x and y axis scales
-    plt.xticks(ticks=range(0, image.size[0], 100))
-    plt.yticks(ticks=range(0, image.size[1], 100))
-
-    # Set x and y axis labels
-    plt.xlabel('X Scale')
-    plt.ylabel('Y Scale')
-
-    # Save the plot to a buffer
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight')
-    buf.seek(0)
-
-    # Convert the buffer to a base64-encoded string
-    encoded_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+    encoded_image = preview_loop_image(task, loop, task_id)
     
     if request.method == 'POST':
         form = LoopForm(request.POST, instance=loop)
@@ -150,38 +126,7 @@ def loop_dashboard(request, task_id):
     loops = Loop.objects.filter(head_task__pk=task_id)
     task = Task.objects.get(pk=task_id)
     
-    # Load the image file
-    image_path = task.image_file
-    image = Image.open(image_path)
-    
-    # Draw a box on the image if there are loops
-    if loops:
-        loopfile = loops_to_json(task_id)
-        img_array = np.array(image)
-        image_draw = draw_loops_test(img_array, loopfile)
-        image = Image.fromarray(image_draw)
-
-    # Set figure size
-    fig = plt.figure(figsize=(10,10))
-
-    # Plot the image with aspect ratio set to 'equal'
-    plt.imshow(np.array(image), aspect='equal')
-
-    # Set x and y axis scales
-    plt.xticks(ticks=range(0, image.size[0], 100))
-    plt.yticks(ticks=range(0, image.size[1], 100))
-
-    # Set x and y axis labels
-    plt.xlabel('X Scale')
-    plt.ylabel('Y Scale')
-
-    # Save the plot to a buffer
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight')
-    buf.seek(0)
-
-    # Convert the buffer to a base64-encoded string
-    encoded_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+    encoded_image = preview_loop_image(task, loops, task_id)
     
     
     return render(request, 'loop/LoopDashboard.html', {'loops': loops, 'task_id': task_id, 'task' : task, 'encoded_image': encoded_image})
