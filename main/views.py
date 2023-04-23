@@ -49,6 +49,103 @@ def draw_loops_test(img, loopfile):
         
         return(img)
 
+
+def new_loop(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    loops = Loop.objects.filter(head_task__pk=task_id)
+
+    if request.method == 'POST':
+        form = LoopForm(request.POST)
+        if form.is_valid():
+            loop = form.save(commit=False)
+            loop.head_task = task
+            loop.save()
+            return redirect(reverse("main:loop_dashboard", args=(task_id,)))
+    else:
+        form = LoopForm(initial={'head_task': task})
+    image_path = task.image_file
+    image = Image.open(image_path)
+    
+    # Draw a box on the image if there are loops
+    if loops:
+        loopfile = loops_to_json(task_id)
+        img_array = np.array(image)
+        image_draw = draw_loops_test(img_array, loopfile)
+        image = Image.fromarray(image_draw)
+
+    # Set figure size
+    fig = plt.figure(figsize=(10,10))
+
+    # Plot the image with aspect ratio set to 'equal'
+    plt.imshow(np.array(image), aspect='equal')
+
+    # Set x and y axis scales
+    plt.xticks(ticks=range(0, image.size[0], 100))
+    plt.yticks(ticks=range(0, image.size[1], 100))
+
+    # Set x and y axis labels
+    plt.xlabel('X Scale')
+    plt.ylabel('Y Scale')
+
+    # Save the plot to a buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+
+    # Convert the buffer to a base64-encoded string
+    encoded_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+    return render(request, 'loop/NewLoop.html', {'form': form, 'task_id': task_id,'encoded_image': encoded_image})
+
+
+
+def edit_loop(request, loop_id, task_id):
+    loop = get_object_or_404(Loop, pk=loop_id)
+    task = Task.objects.get(pk=task_id)
+    
+    # Load the image file
+    image_path = task.image_file
+    image = Image.open(image_path)
+    
+    # Draw a box on the image if there are loops
+    if loop:
+        loopfile = loops_to_json(task_id)
+        img_array = np.array(image)
+        image_draw = draw_loops_test(img_array, loopfile)
+        image = Image.fromarray(image_draw)
+
+    # Set figure size
+    fig = plt.figure(figsize=(10,10))
+
+    # Plot the image with aspect ratio set to 'equal'
+    plt.imshow(np.array(image), aspect='equal')
+
+    # Set x and y axis scales
+    plt.xticks(ticks=range(0, image.size[0], 100))
+    plt.yticks(ticks=range(0, image.size[1], 100))
+
+    # Set x and y axis labels
+    plt.xlabel('X Scale')
+    plt.ylabel('Y Scale')
+
+    # Save the plot to a buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+
+    # Convert the buffer to a base64-encoded string
+    encoded_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+    
+    if request.method == 'POST':
+        form = LoopForm(request.POST, instance=loop)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
+    else:
+        form = LoopForm(instance=loop)
+    return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk,'encoded_image': encoded_image })
+
+
 def loop_dashboard(request, task_id):
     loops = Loop.objects.filter(head_task__pk=task_id)
     task = Task.objects.get(pk=task_id)
@@ -282,35 +379,6 @@ def delete_task(request, task_id):
     task.delete()
 
     return redirect(reverse("main:dashboard"))
-
-
-
-def new_loop(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
-    if request.method == 'POST':
-        form = LoopForm(request.POST)
-        if form.is_valid():
-            loop = form.save(commit=False)
-            loop.head_task = task
-            loop.save()
-            return redirect(reverse("main:loop_dashboard", args=(task_id,)))
-    else:
-        form = LoopForm(initial={'head_task': task})
-    return render(request, 'loop/NewLoop.html', {'form': form, 'task_id': task_id})
-
-
-
-def edit_loop(request, loop_id):
-    loop = get_object_or_404(Loop, pk=loop_id)
-    if request.method == 'POST':
-        form = LoopForm(request.POST, instance=loop)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
-    else:
-        form = LoopForm(instance=loop)
-    return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk})
-
 
 
 def delete_loop(request, loop_id):

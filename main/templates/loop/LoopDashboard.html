@@ -31,7 +31,7 @@
             <tr>
                 <td>{{ loop.pk }}</td>
                 <td>{{ loop.loop_name }}</td>
-                <td><a class="btn btn-warning" href="{% url 'main:edit_loop' loop.pk %}" role="button">Edit</a>
+                <td><a class="btn btn-warning" href="{% url 'main:edit_loop' task_id loop.pk %}" role="button">Edit</a>
                 <td><a class="btn btn-danger" href="{% url 'main:delete_loop' loop.pk %}" role="button">Delete</a></td>
             </tr>
             {% endfor %}
