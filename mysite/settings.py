@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -175,3 +176,33 @@ CELERY_TASK_RESULT_EXPIRES = 86400
 # CELERYD_CONCURRENCY = 1
 # CELERY_BROKER_HEARTBEAT = 0
 # CELERY_RESULT_BACKEND = 'django-db'
+# Email
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com' 
+# EMAIL_PORT = 587 
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'wongsakronkongkamud@gmail.com' 
+# EMAIL_HOST_PASSWORD = "twscsyzpxdvptnfn"
+# EMAIL_FROM_ADDRESS = 'Celery <wongsakronkongkamud@gmail.com>' 
+# EMAIL_NOTIFICATION_RECEIVER = 'Celery <f0rtitud0.del001@gmail.com>' 
+
+# SMTP Settings
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER ='wongsakronkongkamud@gmail.com'
+# EMAIL_HOST_PASSWORD = "twscsyzpxdvptnfn"
+# DEFAULT_FROM_EMAIL = 'Celery <wongsakronkongkamud@gmail.com>'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER ='wongsakronkongkamud@gmail.com'
+EMAIL_HOST_PASSWORD = "lkyuvdjduwpxpqjv"
+DEFAULT_FROM_EMAIL = 'Celery <wongsakronkongkamud@gmail.com>'
+
+
+# djjyspqvgxlzgicj

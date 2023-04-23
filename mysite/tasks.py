@@ -2,7 +2,28 @@ from celery import shared_task
 from detect_and_track import mymain
 from main.models import Task, LoopResult, VehicleCount, Loop
 import os
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.conf import settings
 
+@shared_task(bind=True)
+def send_mail_func(self,task_id):
+    task = Task.objects.get(task_id=task_id)
+    users = get_user_model().objects.all()
+
+    #timezone.localtime(users.date_time) + timedelta(days=2)
+    for user in users:
+        mail_subject = "Hi! Your Task is Finished"
+        message = f"Your Task ID {task.task_id} location {task.location} is Finished"
+        to_email = user.email
+        send_mail(
+            subject = mail_subject,
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[to_email],
+            fail_silently=True,
+        )
+    return "Done"
 
 @shared_task
 def run_detect(vdofile, loopfile, task_id):
@@ -11,7 +32,16 @@ def run_detect(vdofile, loopfile, task_id):
     counting_result_path, video_result_path = saved_result
 
     adapter_func(task_id, counting_result_path, video_result_path)
-
+    #send_mail_func.delay(task_id)
+    send_mail_func.apply_async(args=[task_id])
+    # send_mail(
+    #     'Task completed',
+    #     'Your Celery task has completed successfully.',
+    #     settings.EMAIL_FROM_ADDRESS,
+    #     [settings.EMAIL_NOTIFICATION_RECEIVER],
+    #     fail_silently=False,
+    # )
+    
     return saved_result
 
 
