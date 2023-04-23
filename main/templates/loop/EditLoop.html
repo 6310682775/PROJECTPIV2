@@ -22,20 +22,15 @@
 </style>
 <section class="new-loop-form" >
     <h1>Edit Loop</h1>
-      <div class="form-loop">
-          <form method="POST" enctype="multipart/form-data">
-              {% csrf_token %} 
-              {{ form.as_p }}
-              <button type="submit">Save</button>
-              <a class="btn btn-back-loop new-loop-back" href="{% url 'main:loop_dashboard' task_id %}">back</a>
-          </form>
-      </div>
-  <img src="data:image/jpeg;base64,{{ encoded_image }}" alt="Modified Image" style="max-width: 30%; height: auto;">
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %} 
-    {{ form.as_p }}
-    <button type="submit">Edit Loop</button>
-  </form>
+    <img src="data:image/jpeg;base64,{{ encoded_image }}" alt="Modified Image" style="max-width: 30%; height: auto;">
+    <div class="form-loop">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %} 
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+            <a class="btn btn-back-loop new-loop-back" href="{% url 'main:loop_dashboard' task_id %}">back</a>
+        </form>
+    </div>
 </section>
 
 {% endblock %}

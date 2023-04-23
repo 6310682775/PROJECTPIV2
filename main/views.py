@@ -1,4 +1,6 @@
 # from django.shortcuts import render
+import matplotlib.pyplot as plt
+import matplotlib
 from django.http import JsonResponse
 from mysite.tasks import *
 import json
@@ -33,12 +35,13 @@ from io import BytesIO
 import cv2
 import numpy as np
 media_url = settings.MEDIA_URL
-import matplotlib.pyplot as plt
+matplotlib.use('Agg')
 
-def preview_loop_image(task,loops,task_id):
+
+def preview_loop_image(task, loops, task_id):
     image_path = task.image_file
     image = Image.open(image_path)
-    
+
     # Draw a box on the image if there are loops
     if loops:
         loopfile = loops_to_json(task_id)
@@ -47,7 +50,7 @@ def preview_loop_image(task,loops,task_id):
         image = Image.fromarray(image_draw)
 
     # Set figure size
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure(figsize=(10, 10))
 
     # Plot the image with aspect ratio set to 'equal'
     plt.imshow(np.array(image), aspect='equal')
@@ -72,18 +75,23 @@ def preview_loop_image(task,loops,task_id):
 
 
 def draw_loops_test(img, loopfile):
-        count_boxes = loopfile
-        loops = count_boxes["loops"]
-        for loop in loops:
-            pt0,pt1,pt2,pt3 = loop["points"]
-            
-            cv2.line(img, (pt0["x"],pt0["y"]),(pt1["x"],pt1["y"]),(255,0,0),2) #entering line
-            cv2.line(img, (pt1["x"],pt1["y"]),(pt2["x"],pt2["y"]),(255,255,0),2) #left line
-            cv2.line(img, (pt2["x"],pt2["y"]),(pt3["x"],pt3["y"]),(255,255,0),2) #straight
-            cv2.line(img, (pt3["x"],pt3["y"]),(pt0["x"],pt0["y"]),(255,255,0),2) #right
-            cv2.putText(img,loop["name"],(pt0["x"],pt0["y"]),cv2.FONT_HERSHEY_SIMPLEX, 0.6, [0, 255, 0], 2)
-        
-        return(img)
+    count_boxes = loopfile
+    loops = count_boxes["loops"]
+    for loop in loops:
+        pt0, pt1, pt2, pt3 = loop["points"]
+
+        cv2.line(img, (pt0["x"], pt0["y"]), (pt1["x"],
+                 pt1["y"]), (255, 0, 0), 2)  # entering line
+        cv2.line(img, (pt1["x"], pt1["y"]), (pt2["x"],
+                 pt2["y"]), (255, 255, 0), 2)  # left line
+        cv2.line(img, (pt2["x"], pt2["y"]), (pt3["x"],
+                 pt3["y"]), (255, 255, 0), 2)  # straight
+        cv2.line(img, (pt3["x"], pt3["y"]), (pt0["x"],
+                 pt0["y"]), (255, 255, 0), 2)  # right
+        cv2.putText(img, loop["name"], (pt0["x"], pt0["y"]),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, [0, 255, 0], 2)
+
+    return (img)
 
 
 def new_loop(request, task_id):
@@ -99,19 +107,18 @@ def new_loop(request, task_id):
             return redirect(reverse("main:loop_dashboard", args=(task_id,)))
     else:
         form = LoopForm(initial={'head_task': task})
-    
-    encoded_image = preview_loop_image(task,loops, task_id)
 
-    return render(request, 'loop/NewLoop.html', {'form': form, 'task_id': task_id,'encoded_image': encoded_image})
+    encoded_image = preview_loop_image(task, loops, task_id)
 
+    return render(request, 'loop/NewLoop.html', {'form': form, 'task_id': task_id, 'encoded_image': encoded_image})
 
 
 def edit_loop(request, loop_id, task_id):
     loop = get_object_or_404(Loop, pk=loop_id)
     task = Task.objects.get(pk=task_id)
-    
+
     encoded_image = preview_loop_image(task, loop, task_id)
-    
+
     if request.method == 'POST':
         form = LoopForm(request.POST, instance=loop)
         if form.is_valid():
@@ -119,17 +126,17 @@ def edit_loop(request, loop_id, task_id):
             return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
     else:
         form = LoopForm(instance=loop)
-    return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk,'encoded_image': encoded_image })
+    return render(request, 'loop/EditLoop.html', {'form': form, 'task_id': loop.head_task.pk, 'encoded_image': encoded_image})
 
 
 def loop_dashboard(request, task_id):
     loops = Loop.objects.filter(head_task__pk=task_id)
     task = Task.objects.get(pk=task_id)
-    
+
     encoded_image = preview_loop_image(task, loops, task_id)
-    
-    
-    return render(request, 'loop/LoopDashboard.html', {'loops': loops, 'task_id': task_id, 'task' : task, 'encoded_image': encoded_image})
+
+    return render(request, 'loop/LoopDashboard.html', {'loops': loops, 'task_id': task_id, 'task': task, 'encoded_image': encoded_image})
+
 
 def new_task(request):
     if request.method == 'POST':
@@ -137,25 +144,25 @@ def new_task(request):
         if form.is_valid():
             task = form.save(commit=False)
             task.save()
-            
-            
-            video_file = task.video_file.path
-            img_path = os.path.join(settings.MEDIA_ROOT, 'result', 'images', f"{task.task_id}.png")
 
-           
+            video_file = task.video_file.path
+            img_path = os.path.join(
+                settings.MEDIA_ROOT, 'result', 'images', f"{task.task_id}.png")
+
             for frame_count, frame in enumerate(iio.imiter(video_file)):
                 iio.imwrite(img_path, frame, format='png')
-                if frame_count ==0:
+                if frame_count == 0:
                     break
-            
+
             # save the image file path in the database
             task.image_file = img_path
             task.save()
-           
+
             return redirect(reverse("main:dashboard"))
     else:
         form = TaskForm()
     return render(request, 'task/NewTask.html', {'form': form})
+
 
 def signup_view(request):
     if (request.user.is_authenticated):
@@ -190,11 +197,9 @@ def login_view(request):
     return render(request, 'authenticate/login.html')
 
 
-
 def logout_view(request):
     logout(request)
     return redirect('main:login')
-
 
 
 def home_page(request):
@@ -207,12 +212,10 @@ def account_page(request):
     return render(request, 'authenticate/account.html', context)
 
 
-
 def account_page(request):
     username = request.user.username
     context = {'name': username}
     return render(request, 'authenticate/account.html', context)
-
 
 
 def download_file(request, result_id):
@@ -227,7 +230,6 @@ def download_file(request, result_id):
     return response
 
 
-
 def download_raw_file(request, task_id):
     obj = get_object_or_404(Task, task_id=task_id)
     file = obj.counting_result_file.open('rb')
@@ -237,7 +239,6 @@ def download_raw_file(request, task_id):
     return response
 
 
-
 def download_video(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     video_path = task.video_result_file.path
@@ -245,7 +246,6 @@ def download_video(request, task_id):
     response = FileResponse(open(video_path, 'rb'), content_type='video/mp4')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
-
 
 
 def download_all_file(request, task_id):
@@ -264,7 +264,6 @@ def download_all_file(request, task_id):
     response["Content-Disposition"] = f"attachment; filename={zip_file_name}"
 
     return response
-
 
 
 def dashboard(request):
@@ -300,10 +299,6 @@ def check_result(request):
         return HttpResponse("processing")
 
 
-
-
-
-
 def edit_task(request, task_id):
     task = get_object_or_404(Task, task_id=task_id)
     if request.method == 'POST':
@@ -314,7 +309,6 @@ def edit_task(request, task_id):
     else:
         form = TaskForm(instance=task)
     return render(request, 'task/EditTask.html', {'form': form})
-
 
 
 def delete_task(request, task_id):
@@ -333,9 +327,6 @@ def delete_loop(request, loop_id):
     loop.delete()
 
     return redirect(reverse("main:loop_dashboard", args=(loop.head_task.pk,)))
-
-
-
 
 
 def loops_to_json(task_id):
@@ -363,7 +354,6 @@ def loops_to_json(task_id):
 
     response_data = {'loops': loop_list}
     return response_data
-
 
 
 def call_detect(request, task_id):
@@ -419,7 +409,6 @@ def call_detect(request, task_id):
     return redirect(reverse("main:dashboard"))
 
 
-
 def get_result(request, task_id):
     loop_count = 3
     task = Task.objects.get(pk=task_id)
@@ -432,6 +421,7 @@ def get_result(request, task_id):
         results.append((vehicle_count, loop_result))
     return render(request, 'task/CountingResult.html', {'results': results, 'task': task})
 
+
 def search(request):
     tasks = Task.objects.all()
 
@@ -442,7 +432,7 @@ def search(request):
     date = request.GET.get('date')
     if date:
         tasks = tasks.filter(date_time__icontains=date)
-        
+
     task_status_data = []
     for task in tasks:
         if task.task_id_celery is not None:
@@ -455,7 +445,7 @@ def search(request):
         task_status_data.append({
             'task_id': task.task_id,
             'location': task.location,
-            'description': task.description,    
+            'description': task.description,
             'date_time': task.date_time,
             'status': status,
             'time': task.time,
@@ -469,4 +459,3 @@ def search(request):
     }
 
     return render(request, 'task/Dashboard.html', context)
-
