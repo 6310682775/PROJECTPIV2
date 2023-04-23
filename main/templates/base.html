@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <!-- jQuery library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -198,7 +199,30 @@
                 margin: 0px
             }
         }
+    
+    #notification-container {
+        position: fixed;
+        top: 50px;
+        right: 150px;
+        width: 400px;
+        height: 300px;
+        overflow-y: auto;
+        background-color: #fff;            
+        border: 1px solid #ccc;
+    }
 
+    .notification-item {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48
+    }
 
     </style>
     <title>{% block title %}My Website{% endblock %}</title>
@@ -214,6 +238,10 @@
                                 <h2 style="margin:0px;"><a style="text-decoration:none; color:white;" href="/home"><span class="largenav">Trafficmonitor </span></a></h2>
                             </div>
                             <ul class="largenav pull-right">
+                                <li><a href="#" id="notification-link"><span class="material-symbols-outlined">
+                                    notifications
+                                    </span>Notifications</a>
+                                </li>
                                 <li class="upper-links dropdown"><a class="links" href="">Task Dashboard</a>
                                     <ul class="dropdown-menu">
                                         <li class="profile-li"><a class="profile-links" href="/dashboard">All Tasks</a></li>
@@ -232,6 +260,53 @@
                     </div>
                 </div>
             </nav>
+
+            <!-- Notification container code -->
+            <div id="notification-container" style="display: none;">
+                <script>
+                    // Get a reference to the container element
+                    const container = document.getElementById("notification-container");
+
+                    // Function to append a new notification item at the beginning of the container element
+                    function prependNotification(message) {
+                        // Create a new notification item element
+                        const notificationItem = document.createElement("div");
+                        notificationItem.classList.add("notification-item");
+                        notificationItem.textContent = message;
+
+                        // Insert the new notification item at the beginning of the container element
+                        container.insertBefore(notificationItem, container.firstChild);
+                    }
+
+                    // Add event listener to the document
+                    document.addEventListener('click', function(event) {
+                        // If clicked element is not within the notification container
+                        if (!container.contains(event.target) && event.target.id !== 'notification-link') {
+                            // Hide the container
+                            container.style.display = 'none';
+                        }
+                    });
+
+                    // Add event listener to the notification link
+                    document.getElementById('notification-link').addEventListener('click', function(event) {
+                        // Prevent default link behavior
+                        event.preventDefault();
+
+                        // Toggle the display of the notification container
+                        container.style.display = container.style.display === 'block' ? 'none' : 'block';
+                    });
+                </script>
+
+                {% for task in tasks %}
+                    {% if task.status == "SUCCESS" %}
+                        <script>
+                            // Append a new notification item for the successful task
+                            prependNotification("Task ID: {{ task.task_id }}, Location: {{ task.location }} has been succeeded.");
+                        </script>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
             <script>
                 $(document).ready(function(){
                 

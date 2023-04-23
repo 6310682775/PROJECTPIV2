@@ -459,3 +459,30 @@ def search(request):
     }
 
     return render(request, 'task/Dashboard.html', context)
+
+
+def notifications(request):
+    tasks = Task.objects.all()
+    task_status_data = []
+    success_tasks = []
+    for task in tasks:
+        if task.task_id_celery is not None:
+            task_result = AsyncResult(task.task_id_celery)
+            status = task_result.status
+            task = Task.objects.get(pk=task.pk)
+            task.state = status
+        else:
+            status = "UNPROCESS"
+        task_status_data.append({
+            'status': status,
+            'task_id': task.task_id,
+            'location': task.location,
+        })
+
+        if status == "SUCCESS":  # If the task status is "SUCCESS", add it to the list
+            success_tasks.append(task)
+
+    # if len(success_tasks) > 0: # If there are any tasks with a status of "SUCCESS"
+    #     messages.success(request, "Work status is SUCCESS!") # send a success message
+
+    return render(request, 'task/Notifications.html', {'tasks': task_status_data})

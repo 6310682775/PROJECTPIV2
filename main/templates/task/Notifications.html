@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="notification-container">
+    <script>
+        // Get a reference to the container element
+        const container = document.getElementById("notification-container");
+
+        // Function to append a new notification item at the beginning of the container element
+        function prependNotification(message) {
+            // Create a new notification item element
+            const notificationItem = document.createElement("div");
+            notificationItem.classList.add("notification-item");
+            notificationItem.textContent = message;
+
+            // Insert the new notification item at the beginning of the container element
+            container.insertBefore(notificationItem, container.firstChild);
+        }
+
+        // Add a click event listener to the document object
+        document.addEventListener('click', function(event) {
+            // Check if the event target is not inside the notification container
+            if (!container.contains(event.target)) {
+                // Hide the container
+                container.style.display = 'none';
+            }
+        });
+    </script>
+
+    {% for task in tasks %}
+        {% if task.status == "SUCCESS" %}
+            <script>
+                // Append a new notification item for the successful task
+                prependNotification("Task ID {{ task.task_id }} has been succeeded.");
+            </script>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
+
+<style>
