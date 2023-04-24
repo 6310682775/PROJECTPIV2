@@ -1,6 +1,5 @@
 
 {% extends 'base.html' %}
-
 {% block content %}
 <style>
 
@@ -154,9 +153,7 @@
             <td>{{ task.date_time }}</td>
             <td>{{ task.location }}</td>
             <td>{{ task.description }}</td>
-            <td>
-            {{ task.status }}
-            </td>
+            <td id="task-status-{{ task.task_id }}">{{ task.status }}</td>
             <td>{{ task.time }}</td>
             {% if task.status == "UNPROCESS" or task.status == "FAILURE"  %}
                 <td>
@@ -198,6 +195,31 @@
             
         </tr>
         {% endfor %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      setInterval(function(){
+        $.ajax({
+            url: "get-task-status/",
+          type: "GET",
+          success: function(data) {
+            updateTaskStatus(data);
+          },
+          error: function(xhr, status, error) {
+            console.log(xhr.responseText);
+          }
+        });
+      }, 5000);
+
+      function updateTaskStatus(data) {
+      for (var i = 0; i < data.length; i++) {
+        var task = data[i];
+        var statusElement = $('#task-status-' + task.task_id);
+        statusElement.text(task.status);
+      }
+    }
+    });
+  </script>
         </tbody>
     </table>
     {% else %}

@@ -7,6 +7,8 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
+    path('get-task-status/',
+         views.get_task_status, name='get_task_status'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('task/new/', views.new_task, name='new_task'),
     path('task/edit/<int:task_id>/', views.edit_task, name='edit_task'),

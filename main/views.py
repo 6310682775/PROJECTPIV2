@@ -146,6 +146,9 @@ def new_task(request):
             task.save()
 
             video_file = task.video_file.path
+            folder_path = os.path.join(settings.MEDIA_ROOT, 'result/images')
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
             img_path = os.path.join(
                 settings.MEDIA_ROOT, 'result', 'images', f"{task.task_id}.png")
 
@@ -273,8 +276,6 @@ def dashboard(request):
         if task.task_id_celery is not None:
             task_result = AsyncResult(task.task_id_celery)
             status = task_result.status
-            task = Task.objects.get(pk=task.pk)
-            task.state = status
         else:
             status = "UNPROCESS"
         task_status_data.append({
@@ -288,6 +289,22 @@ def dashboard(request):
             'video_file': task.video_file,
         })
     return render(request, 'task/Dashboard.html', {'tasks': task_status_data})
+
+
+def get_task_status(request):
+    tasks = Task.objects.all()
+    task_status_data = []
+    for task in tasks:
+        if task.task_id_celery is not None:
+            task_result = AsyncResult(task.task_id_celery)
+            status = task_result.status
+        else:
+            status = "UNPROCESS"
+        task_status_data.append({
+            'task_id': task.task_id,
+            'status': status,
+        })
+    return JsonResponse(task_status_data, safe=False)
 
 
 def check_result(request):
