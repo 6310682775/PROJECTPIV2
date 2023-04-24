@@ -10,8 +10,8 @@ from django.core.validators import MinValueValidator
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['date_time', 'location', 'description',
-                  'video_file', 'time']
+        fields = ['date_time', 'time', 'location', 'description', 'latitude', 'longtitude',
+                  'video_file',]
         widgets = {
             'date_time': DateTimeInput(attrs={'type': 'date'}),
             'time': TimeInput(attrs={'type': 'time'}),

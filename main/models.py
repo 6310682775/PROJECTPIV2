@@ -9,17 +9,21 @@ class Task(models.Model):
     task_id = models.AutoField(primary_key=True)
     task_id_celery = models.CharField(max_length=50, null=True)
     date_time = models.CharField(max_length=50)
+    time = models.CharField(max_length=50)
     date_time_modify = models.DateTimeField(auto_now=True)
     date_time_upload = models.DateTimeField(auto_now_add=True)
-    location = models.CharField(max_length=50)
+    location = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
-    video_file = models.FileField(upload_to='videos/')
-    time = models.CharField(max_length=50)
-    video_result_file = models.FileField(upload_to='result/video/', null=True)
+    longtitude = models.CharField(max_length=50)
+    latitude = models.CharField(max_length=50)
+    video_file = models.FileField(
+        upload_to='videos/', validators=[FileExtensionValidator(['mp4', 'avi', 'mov'])])
+    video_result_file = models.FileField(upload_to='result/video/', null=True, validators=[
+                                         FileExtensionValidator(['mp4', 'avi', 'mov'])])
     counting_result_file = models.FileField(
         upload_to='result/counting/', null=True)
-    state = models.CharField(max_length=50)
-    image_file = models.ImageField(upload_to='images/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])], null=True)
+    image_file = models.ImageField(upload_to='images/', validators=[
+                                   FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])], null=True)
 
 
 class LoopResult(models.Model):
@@ -56,5 +60,6 @@ class Loop(models.Model):
     y_4 = models.IntegerField()
     summary_location_x = models.IntegerField()
     summary_location_y = models.IntegerField()
+
     def __str__(self):
         return self.loop_name
