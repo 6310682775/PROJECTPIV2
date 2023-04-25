@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
@@ -153,9 +152,22 @@
     {
         display: inline-block;
     }
+    
+    .videopreview
+    {
+        text-align: center;
+        margin-bottom: 50px;
+        cursor: pointer;
+    }
     </style>
     <br>
     <h1>Counting Result</h1><br>
+    <div class="videopreview">
+        <video controls width="400">
+            <source src="{% url 'main:download_video' task.task_id %}" type="video/mp4">
+        </video>
+    </div>
+
     <div id="outer">
         <div class="inner"><a href="{% url 'main:download_video' task.task_id %}" download><button class="downloadbut">Download Video Result</button></a></div>
         <div class="inner"><a href="{% url 'main:download_all_file' task.task_id %}" download><button class="downloadbut">Download Summary Result</button></a></div>
