@@ -208,7 +208,7 @@
                 // Loop through the tasks and update the table
                 for (var i = 0; i < tasks.length; i++) {
                     var task = tasks[i];
-                    var rosw = $('#tasks-table').find('tr[data-task-id="' + task.task_id + '"]');
+                    var row = $('#tasks-table').find('tr[data-task-id="' + task.task_id + '"]');
                     
                     row.find('#task-status-' + task.task_id).html(task.status);
 
