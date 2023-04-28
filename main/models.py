@@ -46,10 +46,13 @@ class VehicleCount(models.Model):
 
 
 class Loop(models.Model):
+    ORIENTATION = [
+        ("COUNTERCLOCKWISE", "counterclockwise"),
+        ("CLOCKWISE", "clockwise"),
+    ]
     head_task = models.ForeignKey(Task, on_delete=models.CASCADE)
     loop_name = models.CharField(max_length=255)
     loop_id = models.IntegerField()
-    orientation = models.CharField(max_length=255)
     x_1 = models.IntegerField()
     y_1 = models.IntegerField()
     x_2 = models.IntegerField()
@@ -58,6 +61,7 @@ class Loop(models.Model):
     y_3 = models.IntegerField()
     x_4 = models.IntegerField()
     y_4 = models.IntegerField()
+    orientation = models.CharField(max_length=20, choices=ORIENTATION)
     summary_location_x = models.IntegerField()
     summary_location_y = models.IntegerField()
 

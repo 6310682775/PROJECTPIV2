@@ -27,7 +27,7 @@ class TaskForm(forms.ModelForm):
 
 class LoopForm(forms.ModelForm):
 
-    loop_id = forms.IntegerField(validators=[MinValueValidator(0)])
+    # loop_id = forms.IntegerField(validators=[MinValueValidator(0)])
     x_1 = forms.DecimalField(validators=[MinValueValidator(0)], initial=900)
     y_1 = forms.DecimalField(validators=[MinValueValidator(0)], initial=600)
     x_2 = forms.DecimalField(validators=[MinValueValidator(0)], initial=900)
@@ -43,8 +43,7 @@ class LoopForm(forms.ModelForm):
 
     class Meta:
         model = Loop
-        fields = ['loop_name', 'loop_id', 'orientation',
-                  'x_1', 'y_1', 'x_2', 'y_2', 'x_3', 'y_3', 'x_4', 'y_4',
+        fields = ['loop_name', 'x_1', 'y_1', 'x_2', 'y_2', 'x_3', 'y_3', 'x_4', 'y_4', 'orientation',
                   'summary_location_x', 'summary_location_y']
 
 

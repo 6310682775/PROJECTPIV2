@@ -74,14 +74,12 @@
 {% load static %}
 
 <div class="video-section">
-
-    <!--<img src="{{ task.image_file.url }}" alt="Task Image" style="max-width: 30%; height: auto;">-->
     <img src="data:image/jpeg;base64,{{ encoded_image }}" alt="Modified Image" style="max-width: 30%; height: auto;">
     <div class="table-editloop">
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th scope="col">Loop No.</th>
+                <th scope="col">Loop ID</th>
                 <th scope="col">Loop Name</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
@@ -90,7 +88,7 @@
             <tbody>
             {% for loop in loops %}
             <tr>
-                <td>{{ loop.pk }}</td>
+                <td>{{ loop.loop_id }}</td>
                 <td>{{ loop.loop_name }}</td>
                 <td><a class="btn btn-warning" href="{% url 'main:edit_loop' task_id loop.pk %}" role="button">Edit</a>
                 <td><a class="btn btn-danger" href="{% url 'main:delete_loop' loop.pk %}" role="button">Delete</a></td>
