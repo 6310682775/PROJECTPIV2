@@ -130,8 +130,7 @@
 <br>
 <br>
 <section class="center">
-    {% if tasks %}
-    <table>
+    <table id="tasks-table">
         <thead>
         <tr>
             <th scope="col">ID</th>
@@ -147,84 +146,100 @@
         </tr>
         </thead>
         <tbody>
-        {% for task in tasks %}
-        <tr>
-            <td>{{ task.task_id }}</td>
-            <td>{{ task.date_time }}</td>
-            <td>{{ task.location }}</td>
-            <td>{{ task.description }}</td>
-            <td id="task-status-{{ task.task_id }}">{{ task.status }}</td>
-            <td>{{ task.time }}</td>
-            {% if task.status == "UNPROCESS" or task.status == "FAILURE"  %}
-                <td>
+            {% for task in tasks %}
+            <tr data-task-id="{{ task.task_id }}">
+                <td>{{ task.task_id }}</td>
+                <td>{{ task.date_time }}</td>
+                <td>{{ task.location }}</td>
+                <td>{{ task.description }}</td>
+                <td id="task-status-{{ task.task_id }}">{{ task.status }}</td>
+                <td>{{ task.time }}</td>
+                <td class="edit-task">
+                    {% if task.status == "UNPROCESS" or task.status == "FAILURE" %}
                     <a class="btn btn-warning" href="{% url 'main:edit_task' task.task_id %}" role="button">Edit</a>
+                    {% else %}
+                    <button type="button" class="btn btn-secondary">Edit</button>
+                    {% endif %}
                 </td>
-                <td>
+                <td class="edit-loop">
+                    {% if task.status == "UNPROCESS" or task.status == "FAILURE" %}
                     <a class="btn btn-warning" href="{% url 'main:loop_dashboard' task.task_id %}" role="button">Edit Loop</a>
+                    {% else %}
+                    <button type="button" class="btn btn-secondary">Edit Loop</button>
+                    {% endif %}
                 </td>
-            {% else %}
-                <td><button type="button" class="btn btn-secondary">Edit</button></td>
-                <td><button type="button" class="btn btn-secondary">Edit Loop</button></td>
-            {% endif %}
-            <td>
-                <a class="btn btn-danger" href="{% url 'main:delete_task' task.task_id %}" role="button">Delete</a>
-            </td>
-            {% if task.status == "UNPROCESS" %}
                 <td>
+                    <a class="btn btn-danger" href="{% url 'main:delete_task' task.task_id %}" role="button">Delete</a>
+                </td>
+                <td class="action">
+                    {% if task.status == "UNPROCESS" %}
                     <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
                         {% csrf_token %}
                         <div>
                             <button type="submit">Send Task</button>
                         </div>
                     </form>
-                </td>
-            {% elif task.status == "FAILURE" %}
-                <td>
+                    {% elif task.status == "FAILURE" %}
                     <form method="POST" enctype="multipart/form-data" action="{% url 'main:call_detect' task.task_id %}">
                         {% csrf_token %}
                         <div>
                             <button type="submit">Resend Task</button>
                         </div>
                     </form>
+                    {% elif task.status == "SUCCESS" %}
+                    <a class="btn btn-warning" href="{% url 'main:get_result' task.task_id %}">RESULT</a>
+                    {% else %}
+                    <button type="button" class="btn btn-secondary">Sended</button>
+                    {% endif %}
                 </td>
-            {% elif task.status == "SUCCESS" %}
-                <td><a class="btn btn-warning" href="{% url 'main:get_result' task.task_id %}">RESULT</a></td>
-            {% else %}
-                <td><button type="button" class="btn btn-secondary">Sended</button></td>
-            {% endif %}
-            
-        </tr>
-        {% endfor %}
+            </tr>
+            {% endfor %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
     $(document).ready(function() {
-      setInterval(function(){
+    function updateTable() {
         $.ajax({
-            url: "get-task-status/",
-          type: "GET",
-          success: function(data) {
-            updateTaskStatus(data);
-          },
-          error: function(xhr, status, error) {
-            console.log(xhr.responseText);
-          }
-        });
-      }, 5000);
+            type: 'GET',
+            url: 'http://127.0.0.1:8000/update_task_info/', // Replace with the URL of your view that returns the tasks
+            success: function(data) {
+                // Parse the data returned by the view
+                var tasks = JSON.parse(data);
+                
+                // Loop through the tasks and update the table
+                for (var i = 0; i < tasks.length; i++) {
+                    var task = tasks[i];
+                    var rosw = $('#tasks-table').find('tr[data-task-id="' + task.task_id + '"]');
+                    
+                    row.find('#task-status-' + task.task_id).html(task.status);
 
-      function updateTaskStatus(data) {
-      for (var i = 0; i < data.length; i++) {
-        var task = data[i];
-        var statusElement = $('#task-status-' + task.task_id);
-        statusElement.text(task.status);
-      }
+                    // Update the buttons based on the task status
+                    if (task.status === "UNPROCESS" || task.status === "FAILURE") {
+                        row.find('td.edit-task').html('<a class="btn btn-warning" href="/edit-task/' + task.task_id + '/" role="button">Edit</a>');
+                        row.find('td.edit-loop').html('<a class="btn btn-warning" href="/loop-dashboard/' + task.task_id + '/" role="button">Edit Loop</a>');
+                    } else {
+                        row.find('td.edit-task').html('<button type="button" class="btn btn-secondary">Edit</button>');
+                        row.find('td.edit-loop').html('<button type="button" class="btn btn-secondary">Edit Loop</button>');
+                    }
+                    
+                    if (task.status === "UNPROCESS") {
+                        row.find('td.action').html('<form method="POST" enctype="multipart/form-data" action="/call-detect/' + task.task_id + '/">{% csrf_token %}<div><button type="submit">Send Task</button></div></form>');
+                    } else if (task.status === "FAILURE") {
+                        row.find('td.action').html('<form method="POST" enctype="multipart/form-data" action="/call-detect/' + task.task_id + '/">{% csrf_token %}<div><button type="submit">Resend Task</button></div></form>');
+                    } else if (task.status === "SUCCESS") {
+                        row.find('td.action').html('<a class="btn btn-warning" href="/get-result/' + task.task_id + '/">RESULT</a>');
+                    } else {
+                        row.find('td.action').html('<button type="button" class="btn btn-secondary">Sended</button>');
+                    }
+                }
+            }
+        });
     }
-    });
+    // Call the updateTable function every 5 seconds (5000 milliseconds)
+    setInterval(updateTable, 5000);
+});
   </script>
         </tbody>
     </table>
-    {% else %}
-    <p>No matching tasks found.</p>
-    {% endif %}
 </section>
 
 {% endblock %}

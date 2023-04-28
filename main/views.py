@@ -97,11 +97,12 @@ def draw_loops_test(img, loopfile):
 def new_loop(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     loops = Loop.objects.filter(head_task__pk=task_id)
-
+    loop_count = Loop.objects.filter(head_task=task).count()
     if request.method == 'POST':
         form = LoopForm(request.POST)
         if form.is_valid():
             loop = form.save(commit=False)
+            loop.loop_id = loop_count
             loop.head_task = task
             loop.save()
             return redirect(reverse("main:loop_dashboard", args=(task_id,)))
@@ -215,12 +216,6 @@ def account_page(request):
     return render(request, 'authenticate/account.html', context)
 
 
-def account_page(request):
-    username = request.user.username
-    context = {'name': username}
-    return render(request, 'authenticate/account.html', context)
-
-
 def download_file(request, result_id):
     obj = get_object_or_404(LoopResult, pk=result_id)
     file = obj.summary_file.open('rb')
@@ -285,10 +280,28 @@ def dashboard(request):
             'date_time': task.date_time,
             'status': status,
             'time': task.time,
-            'task_id_celery': task.task_id_celery,
-            'video_file': task.video_file,
         })
     return render(request, 'task/Dashboard.html', {'tasks': task_status_data})
+
+
+def update_task_info(request):
+    tasks = Task.objects.all()
+    task_status_data = []
+    for task in tasks:
+        if task.task_id_celery is not None:
+            task_result = AsyncResult(task.task_id_celery)
+            status = task_result.status
+        else:
+            status = "UNPROCESS"
+        task_status_data.append({
+            'task_id': task.task_id,
+            'location': task.location,
+            'description': task.description,
+            'date_time': task.date_time,
+            'status': status,
+            'time': task.time,
+        })
+    return JsonResponse(json.dumps(task_status_data), safe=False)
 
 
 def get_task_status(request):
@@ -305,15 +318,6 @@ def get_task_status(request):
             'status': status,
         })
     return JsonResponse(task_status_data, safe=False)
-
-
-def check_result(request):
-    task_id = request.GET.get('task_id')
-    task_result = AsyncResult(task_id)
-    if task_result.ready():
-        return HttpResponse("success")
-    else:
-        return HttpResponse("processing")
 
 
 def edit_task(request, task_id):
@@ -374,48 +378,6 @@ def loops_to_json(task_id):
 
 
 def call_detect(request, task_id):
-    loopfile_demo = {
-        "loops": [
-            {
-                "name": "loop1",
-                "id": "0",
-                "points": [
-                    {"x": 900, "y": 600},
-                    {"x": 900, "y": 300},
-                    {"x": 400, "y": 300},
-                    {"x": 400, "y": 600}
-                ],
-                "orientation": "counterclockwise",
-                "summary_location": {"x": 20, "y": "20"}
-            },
-            {
-                "name": "loop2",
-                "id": "1",
-                "points": [
-                    {"x": 280, "y": 450},
-                    {"x": 280, "y": 200},
-                    {"x": 600, "y": 200},
-                    {"x": 600, "y": 450}
-
-                ],
-                "orientation": "clockwise",
-                "summary_location": {"x": 20, "y": "380"}
-            },
-            {
-                "name": "loop3",
-                "id": "2",
-                "points": [
-                    {"x": 600, "y": 80},
-                    {"x": 850, "y": 80},
-                    {"x": 900, "y": 600},
-                    {"x": 600, "y": 600}
-
-                ],
-                "orientation": "clockwise",
-                "summary_location": {"x": 950, "y": "20"}
-            }
-        ]
-    }
     task = Task.objects.get(pk=task_id)
     loopfile = loops_to_json(task_id)
     vdofile = task.video_file.url.lstrip('/')
