@@ -25,19 +25,34 @@
         margin-left: 15%;
     }
 
+    #form-div{
+        background-color: white;
+        padding:5%;
+    }
+
+    #save-btn{
+        margin: 10%;
+    }
+
+    #back-btn{
+        margin: 10%;
+    }
+
 
 
 </style>
 
 <section class="new-task-form" >
-    <h1>New Task</h1>
-    <div class="form-task">
-        <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Save</button>
-                <a class="btn btn-back new-task-back" href="{% url 'main:dashboard'  %}" role="button">Back</a>
-        </form>
-    </div>
+    <section id="form-div">
+        <h1>New Task</h1>
+        <div class="form-task">
+            <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button id="save-btn" type="submit">Save</button>
+                    <a id="back-btn" class="btn btn-back new-task-back" href="{% url 'main:dashboard'  %}" role="button">Back</a>
+            </form>
+        </div>
+    </section>
 </section> 
 {% endblock %}
