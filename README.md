@@ -57,7 +57,7 @@ ACCESS
 ```
 http://localhost:8000
 ```
-3.  Celery
+2.  Celery
 ```
 celery -A mysite.celery worker --pool=solo -l info
 ```
@@ -131,8 +131,7 @@ https://drive.google.com/file/d/1DVvWf2upGc639TE5jEZTMNSrJlJiD2ex/view
 }
 ```
 5.  สร้าง loop มา3 loop ตามข้อมูล
-6.  Test กด send task หน้า celery terminal จะรันขึ้น
-7.  ติดตามstatus ที่ django admin
+6.  Test กด send task หน้า celery terminal จะรันการประมวลผล
 
 
 
