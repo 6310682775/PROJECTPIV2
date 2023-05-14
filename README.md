@@ -8,8 +8,8 @@
 
 # ClASS DIAGRAM
 
-https://drive.google.com/file/d/1Uq4LzrP7XZmpJR2l_A1Mtasie4Oipar_/view?usp=share_link
-https://drive.google.com/file/d/1Uq4LzrP7XZmpJR2l_A1Mtasie4Oipar_/view?usp=share_link
+[classDiagram1](https://drive.google.com/file/d/1C0NK-yBUCDKMyh1pVtj6CSCLyBVNNJMe/view?usp=sharing)
+[classDiagram2](https://drive.google.com/file/d/1Sg4zGttQImzb1w7bDk8rh1rHCBDMk3ls/view?usp=sharing)
 
 
 # SETUP
