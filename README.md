@@ -20,7 +20,7 @@ run redis  ผ่าน commandline
 docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
 ```
 ## GIT REPO
-1.  สร้าง folder ชื่อ App(หรืออะไรก็ได้
+1.  สร้าง folder ชื่อ App(หรืออะไรก็ได้)
 2.  เปิด VS code ด้วย folder นั้น
 3.  clone 
 ```
@@ -47,7 +47,7 @@ python manage.py migrate
 8.  โหลดไฟล์.pt ใส่ในproject (ถ้ามีของเก่าให้ลบของเก่าออกก่อน)
 https://drive.google.com/file/u/3/d/1kQXQBYLxLERxmlfCHzK52U5w_INUYKqV/view?usp=sharing
 
-# RUN PROCESS
+## RUN PROCESS
 1.  Django
 ```
 python manage.py runserver
@@ -60,3 +60,59 @@ http://localhost:8000
 ```
 celery -A mysite.celery worker --pool=solo -l info
 ```
+
+## เตรียมข้อมูล
+1.  newtask
+2.  ใส่ video
+https://drive.google.com/file/d/1DVvWf2upGc639TE5jEZTMNSrJlJiD2ex/view
+3.  เข้าedit loopของtaskนั้น เเล้วกด new loop
+4.  ใส่ข้อมูล loop ตามนี้
+```
+{
+    "loops":[
+        {
+            "name":"loop1",
+            "id":"0",
+            "points":[
+                {"x":900,"y":600},
+                {"x":900,"y":300},
+                {"x":400,"y":300},
+                {"x":400,"y":600}
+            ],
+            "orientation":"counterclockwise",
+            "summary_location":{"x":20,"y":"20"}
+        },
+        {
+            "name":"loop2",
+            "id":"1",
+            "points":[
+                {"x":280,"y":450},
+                {"x":280,"y":200},
+                {"x":600,"y":200},
+                {"x":600,"y":450}
+                
+            ],
+            "orientation":"clockwise",
+            "summary_location":{"x":20,"y":"380"}
+        }
+        ,
+        {
+            "name":"loop3",
+            "id":"2",
+            "points":[
+                {"x":600,"y":80},
+                {"x":850,"y":80},
+                {"x":900,"y":600},
+                {"x":600,"y":600}
+                
+            ],
+            "orientation":"clockwise",
+            "summary_location":{"x":950,"y":"20"}
+        }
+    ]
+}
+```
+5.  สร้าง loop มา3 loop ตามข้อมูล
+6.  Test กด send task หน้า celery terminal จะรันขึ้น
+7.  ติดตามstatus ที่ django admin
+
