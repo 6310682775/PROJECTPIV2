@@ -216,7 +216,7 @@
 
                     // Update the buttons based on the task status
                     if (task.status === "UNPROCESS" || task.status === "FAILURE") {
-                        row.find('td.edit-task').html('<a class="btn btn-warning" href="/edit-task/' + task.task_id + '/" role="button">Edit</a>');
+                        row.find('td.edit-task').html('<a class="btn btn-warning" href="/task/edit/' + task.task_id + '/" role="button">Edit</a>');
                         row.find('td.edit-loop').html('<a class="btn btn-warning" href="/loop-dashboard/' + task.task_id + '/" role="button">Edit Loop</a>');
                     } else {
                         row.find('td.edit-task').html('<button type="button" class="btn btn-secondary">Edit</button>');
@@ -228,7 +228,7 @@
                     } else if (task.status === "FAILURE") {
                         row.find('td.action').html('<form method="POST" enctype="multipart/form-data" action="/call-detect/' + task.task_id + '/">{% csrf_token %}<div><button type="submit">Resend Task</button></div></form>');
                     } else if (task.status === "SUCCESS") {
-                        row.find('td.action').html('<a class="btn btn-warning" href="/get-result/' + task.task_id + '/">RESULT</a>');
+                        row.find('td.action').html('<a class="btn btn-warning" href="/task/result/' + task.task_id + '/">RESULT</a>');
                     } else {
                         row.find('td.action').html('<button type="button" class="btn btn-secondary">Sended</button>');
                     }
