@@ -14,11 +14,6 @@
 
 # SETUP
 
-## DOCKER
-run redis  ผ่าน commandline 
-```
-docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
-```
 ## GIT REPO
 1.  สร้าง folder ชื่อ App(หรืออะไรก็ได้)
 2.  เปิด VS code ด้วย folder นั้น
@@ -46,6 +41,12 @@ python manage.py migrate
 ```
 8.  โหลดไฟล์.pt ใส่ในproject (ถ้ามีของเก่าให้ลบของเก่าออกก่อน)
 https://drive.google.com/file/u/3/d/1kQXQBYLxLERxmlfCHzK52U5w_INUYKqV/view?usp=sharing
+
+## DOCKER
+run redis  ผ่าน commandline 
+```
+docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
+```
 
 ## RUN PROCESS
 1.  Django
