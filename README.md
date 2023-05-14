@@ -38,7 +38,7 @@ pip install -r requirements.txt
 ```
 cd PROJECTPIV2
 ```
-6.  ลบmigrations/001_initial.py
+6.  ลบmigrations/0001_initial.py เเละ 0002_alter_loop_orientation.py
 7.  migrate 
 ```
 python manage.py makemigrations
@@ -59,6 +59,23 @@ http://localhost:8000
 3.  Celery
 ```
 celery -A mysite.celery worker --pool=solo -l info
+```
+
+## SETUP for editloop
+1.  pip install
+```
+pip install imageio\[ffmpeg\]
+pip install "imageio[pyav]"
+```
+2.  mac brew install
+```
+brew install ffmpeg
+```
+3.  แก้import view.py
+```
+import matplotlib
+matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
 ```
 
 ## เตรียมข้อมูล
@@ -116,20 +133,5 @@ https://drive.google.com/file/d/1DVvWf2upGc639TE5jEZTMNSrJlJiD2ex/view
 6.  Test กด send task หน้า celery terminal จะรันขึ้น
 7.  ติดตามstatus ที่ django admin
 
-## SETUP for editloop
-1.  pip install
-```
-pip install imageio\[ffmpeg\]
-pip install "imageio[pyav]"
-```
-2.  mac brew install
-```
-brew install ffmpeg
-```
-3.  แก้import view.py
-```
-import matplotlib
-matplotlib.use('Agg') 
-import matplotlib.pyplot as plt
-```
+
 
