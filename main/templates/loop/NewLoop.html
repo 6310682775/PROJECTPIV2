@@ -17,12 +17,21 @@
         margin-left: 20%;
     }
 
+    .image-container {
+        margin-left: 20%;
+        margin-right: auto;
+    }
+
+
+
 
 </style>
 <section class="new-loop-form" >
     <h1 style="text-align: center;">New Loop</h1>
     <h2 style="text-align: center;">Information</h2>
-    <img src="data:image/jpeg;base64,{{ encoded_image }}" alt="Modified Image" style="max-width: 30%; height: auto;">
+    <div class="image-container">
+        <img src="data:image/jpeg;base64,{{ encoded_image }}" alt="Modified Image" style="max-width: 70%; height: auto;">
+    </div>
     <div class="form-loop">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}

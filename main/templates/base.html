@@ -186,6 +186,11 @@
             padding: 3px 8px;
         }
 
+        #notification-link {
+            color: white; 
+        }
+        
+
         @media screen and (min-width: 768px) {
             .largenav {
                 display: block
@@ -230,36 +235,42 @@
 
 <body>
     <header>
-            <nav class="top-bar fixed">
-                <div class="navbar">
-                    <div class="container">
-                        <div class="row row1">
-                            <div class="col-sm-3">
-                                <h2 style="margin:0px;"><a style="text-decoration:none; color:white;" href="/home"><span class="largenav">Trafficmonitor </span></a></h2>
-                            </div>
-                            <ul class="largenav pull-right">
-                                <li><a href="#" id="notification-link"><span class="material-symbols-outlined">
-                                    notifications
-                                    </span>Notifications</a>
-                                </li>
-                                <li class="upper-links dropdown"><a class="links" href="">Task Dashboard</a>
-                                    <ul class="dropdown-menu">
-                                        <li class="profile-li"><a class="profile-links" href="/dashboard">All Tasks</a></li>
-                                        <li class="profile-li"><a class="profile-links" href="/task/new/">New Task</a></li>
-                                    </ul>
-                                </li>
-                                
-                                <li class="upper-links dropdown"><a class="links" href="">My Account</a>
-                                    <ul class="dropdown-menu">
-                                        <li class="profile-li"><a class="profile-links" href="/account">My Profile</a></li> 
-                                        <li class="profile-li"><a class="profile-links" href="/logout">Logout</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+        <nav class="top-bar fixed">
+            <div class="navbar">
+                <div class="container">
+                    <div class="row row1">
+                        <div class="col-sm-3">
+                            <h2 style="margin:0px;"><a style="text-decoration:none; color:white;" href="/home"><span class="largenav">Trafficmonitor </span></a></h2>
                         </div>
+                        <ul class="largenav pull-right">
+
+                            <li class="upper-links">
+                                <a href="#" id="notification-link">
+                                    <span class="material-symbols-outlined">notifications</span>
+                                    Notifications
+                                </a>
+                            </li>
+
+                            <li class="upper-links dropdown">
+                                <a class="links" href="#">Task Dashboard</a>
+                                <ul class="dropdown-menu">
+                                    <li class="profile-li"><a class="profile-links" href="/dashboard">All Tasks</a></li>
+                                    <li class="profile-li"><a class="profile-links" href="/task/new/">New Task</a></li>
+                                </ul>
+                            </li>
+    
+                            <li class="upper-links dropdown">
+                                <a class="links" href="#">My Account</a>
+                                <ul class="dropdown-menu">
+                                    <li class="profile-li"><a class="profile-links" href="/account">My Profile</a></li>
+                                    <li class="profile-li"><a class="profile-links" href="/logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </nav>
+            </div>
+        </nav>
 
             <!-- Notification container code -->
             <div id="notification-container" style="display: none;">
