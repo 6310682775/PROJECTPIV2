@@ -116,3 +116,15 @@ https://drive.google.com/file/d/1DVvWf2upGc639TE5jEZTMNSrJlJiD2ex/view
 6.  Test กด send task หน้า celery terminal จะรันขึ้น
 7.  ติดตามstatus ที่ django admin
 
+## SETUP for editloop
+1.  pip install
+```
+pip install imageio\[ffmpeg\]
+pip install "imageio[pyav]"
+```
+2.  แก้import view.py
+```
+import matplotlib
+matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
+```
